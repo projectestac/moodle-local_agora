@@ -5,6 +5,21 @@ function is_agora(){
 	return isset($CFG->isagora) && $CFG->isagora;
 }
 
+function is_marsupial(){
+    global $CFG;
+    return isset($CFG->ismarsupial) && $CFG->ismarsupial;
+}
+
+function is_eoi(){
+    global $CFG;
+    return isset($CFG->iseoi) && $CFG->iseoi;
+}
+
+function is_portal(){
+    global $CFG;
+    return isset($CFG->isportal) && $CFG->isportal;
+}
+
 function is_xtecadmin($user=null){
 	global $USER;
     if (empty($user)) $user = $USER;
@@ -215,14 +230,25 @@ function is_rush_hour() {
  * @author sarjona
  **/
 function is_enabled_in_agora ($mod){
-    global $CFG;
-    if ( (isset($CFG->isagora) && $CFG->isagora) &&
-         (((!isset($CFG->ismarsupial) || !$CFG->ismarsupial) && ($mod=='rcontent' || $mod=='rscorm' || $mod=='atria' || $mod=='rcommon' || $mod=='my_books' || $mod=='rgrade') )
-         || ((!isset($CFG->iseoi) || !$CFG->iseoi) && ($mod=='eoicampus') )
-         || ((!isset($CFG->isportal) || !$CFG->isportal) && $mod == 'admin_service' )
-         || ( $mod=='clean' || $mod=='afterburner' || $mod=='anomaly' || $mod=='arialist' || $mod == 'base' || $mod == 'binarius' || $mod == 'boxxie' || $mod == 'brick' || $mod == 'canvas' || $mod == 'formal_white' || $mod == 'formfactor' || $mod == 'fusion' || $mod == 'leatherbound' || $mod == 'magazine' || $mod == 'nimble' || $mod == 'nonzero' || $mod=='overlay' || $mod=='serenity' || $mod=='sky_high' || $mod=='splash' || $mod=='standard' || $mod=='standardold' || (!$CFG->enabledevicedetection && $mod=='mymobile' )) )
-         || (!is_xtecadmin() && $mod == 'alfresco') ) {
-        return false;
+    if (is_agora()){
+        // Only enabled in marsupial Moodles
+        if (!is_marsupial() && ($mod=='rcontent' || $mod=='rscorm' || $mod=='atria' || $mod=='rcommon' || $mod=='my_books' || $mod=='rgrade')){
+            return false;
+        }
+        // Only enabled in EOI Moodles
+        if (!is_eoi() && ($mod=='eoicampus')){
+            return false;
+        }
+
+        // Only enabled in Portal Moodles
+        if (!is_portal() && ($mod=='admin_service')){
+            return false;
+        }
+
+        // Disabled in all Agora Moodles
+        if($mod=='clean' || $mod=='afterburner' || $mod=='anomaly' || $mod=='arialist' || $mod == 'base' || $mod == 'binarius' || $mod == 'boxxie' || $mod == 'brick' || $mod == 'canvas' || $mod == 'formal_white' || $mod == 'formfactor' || $mod == 'fusion' || $mod == 'leatherbound' || $mod == 'magazine' || $mod == 'nimble' || $mod == 'nonzero' || $mod=='overlay' || $mod=='serenity' || $mod=='sky_high' || $mod=='splash' || $mod=='standard' || $mod=='standardold' || $mod=='chat' || $mod == 'alfresco'){
+            return false;
+        }
     }
     return true;
 }
