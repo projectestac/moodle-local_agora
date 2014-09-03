@@ -129,17 +129,18 @@ function run_cli($command, $output_file = false, $append = true, $background = t
 
 //Executes a cron via CLI
 function run_cli_cron($background = true){
-    global $CFG;
+    global $CFG, $DB;
 
     $command = $CFG->admin.'/cli/cron.php';
 
     $output_file = false;
+    $savecronlog = $DB->get_field('config', 'value', array('name'=>'savecronlog'));
     // $CFG->savecronlog must be saved on DB
-    if(isset($CFG->savecronlog) && !empty($CFG->savecronlog)) {
+    if(isset($savecronlog) && !empty($savecronlog)) {
         if(isset($CFG->usu1repofiles) && !empty($CFG->usu1repofiles)) {
             $output_dir = $CFG->usu1repofiles.'/crons';
         } else {
-            $output_dir = $CFG->dataroot.'/crons';
+            $output_dir = $CFG->dataroot.'/repository/files/crons';
         }
         $result = make_writable_directory($output_dir, false);
         if($result){
