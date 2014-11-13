@@ -148,20 +148,6 @@ function run_cli_cron($background = true) {
     return run_cli($command, $outputfile, $append, $background);
 }
 
-function local_agora_extends_settings_navigation($settingsnav, $context) {
-    if(is_xtecadmin() || (!is_agora() && is_siteadmin())){
-        global $CFG;
-        if ($settingnode = $settingsnav->find('root', navigation_node::TYPE_SETTING)) {
-            $agora_node = $settingnode->add('Àgora');
-            if (isset($_COOKIE['agora_debug']) && $_COOKIE['agora_debug'] == 1) {
-                $agora_node->add(get_string('disable') . ' ' . get_string('debug', 'admin'), $CFG->wwwroot . '/local/agora/debug.php?agora_debug=0');
-            } else {
-                $agora_node->add(get_string('enable') . ' ' . get_string('debug', 'admin'), $CFG->wwwroot . '/local/agora/debug.php?agora_debug=1');
-            }
-        }
-    }
-}
-
 /**
  * Check if the current time is considered rush hour in order to apply restrictions
  *
@@ -316,7 +302,6 @@ function get_service_url($service) {
  */
 function get_admin_datadir($exceptiononerror = true) {
     global $agora, $CFG;
-
     if (isset($CFG->admindatadir)) {
         return $CFG->admindatadir;
     }
@@ -346,4 +331,96 @@ function get_admin_datadir_folder($folder = '', $exceptiononerror = true) {
     }
 
     return $directory;
+}
+
+
+function get_mailsender() {
+    global $mailsender, $CFG;
+    require_once($CFG->dirroot.'/local/agora/mailer/mailsender.class.php');
+
+    if (!is_null($mailsender)) {
+        return $mailsender;
+    }
+
+    // Load the mailsender
+    $wsdl = get_config('local_agora', 'environment_url');
+    $wsdl = empty($wsdl) ? $CFG->apligestenv : $wsdl;
+
+    try {
+        $mailsender = new mailsender($CFG->apligestaplic, $CFG->noreplyaddress, 'educacio', $wsdl, $CFG->apligestlog, $CFG->apligestlogdebug, $CFG->apligestlogpath);
+    } catch (Exception $e){
+        mtrace('ERROR: Cannot initialize mailsender, no mail will be sent.');
+        mtrace($e->getMessage());
+        mtrace('The execution must go on!');
+        $mailsender = false;
+    }
+    return $mailsender;
+}
+
+function send_apligest_mail($mail, $user) {
+    global $CFG;
+    try {
+        $sender = get_mailsender();
+        if (!$sender) {
+            return false;
+        }
+
+        require_once($CFG->dirroot.'/local/agora/mailer/message.class.php');
+
+        // Load the message
+        $message = new message(TEXTHTML, $CFG->apligestlog, $CFG->apligestlogdebug, $CFG->apligestlogpath);
+
+        // Set $to
+        $toarray = array();
+        foreach ($mail->to as $to) {
+            $toarray[] = $to[0];
+        }
+        $message->set_to($toarray);
+
+        // Set $cc
+        $ccarray = array();
+        foreach ($mail->cc as $cc) {
+            $ccarray[] = $cc[0];
+        }
+        if (!empty($ccarray)) {
+            $message->set_cc($ccarray);
+        }
+
+        // Set $bcc
+        $bccarray = array();
+        foreach ($mail->bcc as $bcc) {
+            $bccarray[] = $bcc[0];
+        }
+        if (!empty($bccarray)) {
+            $message->set_bcc($bccarray);
+        }
+
+        // Set $subject
+        $message->set_subject($mail->Subject);
+
+        // Set $bodyContent
+        $message->set_bodyContent($mail->Body);
+
+        // Add message to mailsender
+        if (!$sender->add($message)) {
+            mtrace('ERROR: '.' Impossible to add message to mailsender');
+            add_to_log(SITEID, 'library', 'mailer', qualified_me(), 'ERROR: '. ' Impossible to add message to mailsender');
+            return false;
+        }
+
+        // Send messages
+        if (!$sender->send_mail()) {
+            mtrace('ERROR: '.' Impossible to send messages');
+            add_to_log(SITEID, 'library', 'mailer', qualified_me(), 'ERROR: '. ' Impossible to send messages');
+            return false;
+        } else {
+            set_send_count($user);
+            return true;
+        }
+    } catch (Exception $e){
+        mtrace('ERROR: Something terrible happened during the mailing and might be repaired');
+        mtrace($e->getMessage());
+        mtrace('The execution must go on!');
+        return false;
+    }
 }

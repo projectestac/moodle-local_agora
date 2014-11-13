@@ -31,3 +31,6 @@ $string['years_ago'] = '{$a} years ago';
 $string['agora_scripts'] = 'Àgora Scripts';
 
 $string['login_nodes'] = 'Login to Nodes';
+
+$string['environment_url'] = 'Mailsender URL';
+$string['environment_url_desc'] = 'If set, this WSDL Mailsender will be used, if not, the default url for {$a} environment will be used';
