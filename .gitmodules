@@ -1,0 +1,3 @@
+[submodule "mailer"]
+	path = mailer
+	url = https://github.com/projectestac/mailer.git
