@@ -9,6 +9,7 @@ class script_enable_service extends agora_script_base{
     public $cron = false;
     protected $test = false;
     public $api = true;
+    public $cli = true;
 
 
     public function params(){
@@ -43,9 +44,9 @@ class script_enable_service extends agora_script_base{
         $adminuser->institution = $params['clientName'];
         $adminuser->address = $params['clientAddress'];
         $adminuser->city = $params['clientCity'];
-        $DB->update_records('user', $adminuser);
+        $DB->update_record('user', $adminuser);
         // Force change of password of user admin
-        set_user_preference('auth_forcepasswordchange', 1, $user);
+        set_user_preference('auth_forcepasswordchange', 1, $adminuser);
         mtrace('Usuari admin configurat', '<br/>');
 
         // Update site name and site description
@@ -57,6 +58,7 @@ class script_enable_service extends agora_script_base{
         $maincourse->fullname = $params['clientName'];
         $maincourse->shortname = $params['clientDNS'];
         $maincourse->summary = 'Moodle del centre ' . $params['clientName'];
+        $DB->update_record('course', $maincourse);
         mtrace('Curs principal configurat', '<br/>');
 
         // Update the cookie name
@@ -82,6 +84,7 @@ fontselect,fontsizeselect,code,search,replace,wrap,cleanup,removeformat,pastetex
         set_config('maxbytes', 0, 'assignsubmission_file');
         mtrace('Límit de tramesa de tasques pujat al límit de servidor', '<br/>');
 
+        purge_all_caches();
         return true;
     }
 
