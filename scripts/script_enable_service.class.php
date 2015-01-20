@@ -84,6 +84,10 @@ fontselect,fontsizeselect,code,search,replace,wrap,cleanup,removeformat,pastetex
         set_config('maxbytes', 0, 'assignsubmission_file');
         mtrace('Límit de tramesa de tasques pujat al límit de servidor', '<br/>');
 
+        // Change rcommon log to admin datadir
+        $rcommonlogdir = get_admin_datadir_folder();
+        set_config('data_store_log', $rcommonlogdir, 'rcommon');
+
         purge_all_caches();
         return true;
     }
