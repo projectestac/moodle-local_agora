@@ -20,6 +20,7 @@ class script_moodle_register extends agora_script_base{
     protected function _execute($params = array(), $execute = true) {
         global $CFG, $DB, $OUTPUT;
         require_once($CFG->dirroot . '/' . $CFG->admin . '/registration/lib.php');
+        require_once($CFG->dirroot . '/course/lib.php');
         require_once($CFG->libdir . '/badgeslib.php');
 
 
