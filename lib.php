@@ -374,6 +374,10 @@ function get_mailsender() {
     $wsdl = empty($wsdl) ? $CFG->apligestenv : $wsdl;
 
     try {
+        if (empty($CFG->apligestlogpath)) {
+            $CFG->apligestlogpath = get_admin_datadir_folder('log').'/mailsender.log';
+            set_config('apligestlogpath', $CFG->apligestlogpath);
+        }
         $mailsender = new mailsender($CFG->apligestaplic, $CFG->noreplyaddress, 'educacio', $wsdl, $CFG->apligestlog, $CFG->apligestlogdebug, $CFG->apligestlogpath);
     } catch (Exception $e){
         mtrace('ERROR: Cannot initialize mailsender, no mail will be sent.');
@@ -393,6 +397,11 @@ function send_apligest_mail($mail, $user) {
         }
 
         require_once($CFG->dirroot.'/local/agora/mailer/message.class.php');
+
+        if (empty($CFG->apligestlogpath)) {
+            $CFG->apligestlogpath = get_admin_datadir_folder('log').'/mailsender.log';
+            set_config('apligestlogpath', $CFG->apligestlogpath);
+        }
 
         // Load the message
         $message = new message(TEXTHTML, $CFG->apligestlog, $CFG->apligestlogdebug, $CFG->apligestlogpath);
