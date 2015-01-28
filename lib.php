@@ -66,6 +66,7 @@ function get_debug() {
     if (isset($_COOKIE['agora_debug']) && $_COOKIE['agora_debug'] == 1) {
             $CFG->debug = E_ALL | E_STRICT;
             $CFG->debugdisplay = 1;
+            $CFG->showcrondebugging = true;
             error_reporting($CFG->debug);
             @ini_set('display_errors', '1');
             @ini_set('log_errors', '0');
@@ -359,6 +360,24 @@ function get_admin_datadir_folder($folder = '', $exceptiononerror = true) {
 
     return $directory;
 }
+
+/**
+ * Return the folder inside admindatadir directory to store admin things
+ *
+ * @param string $folder to add to the admindatadir
+ * @param bool $exceptiononerror throw exception if error encountered creating file
+ * @return string|false Returns full path to directory if successful, false if not; may throw exception
+ */
+function get_moodle2_admin_datadir_folder($folder = '', $exceptiononerror = true) {
+    $directory = get_moodle2_admin_datadir($exceptiononerror);
+    if ($directory && !empty($folder)) {
+        $directory .= '/'.$folder;
+        $directory = make_writable_directory($directory, $exceptiononerror);
+    }
+
+    return $directory;
+}
+
 
 
 function get_mailsender() {
