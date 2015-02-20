@@ -292,12 +292,12 @@ function is_service_enabled($service) {
 }
 
 function get_service_url($service) {
-    global $CFG;
+    global $agora;
     if (is_service_enabled($service)) {
         if ($service == 'nodes') {
-            return $CFG->wwwroot.'/../';
+            return $agora['server']['server'] . $agora['server']['base'];
         }
-        return $CFG->wwwroot.'/../'.$service.'/';
+        return $agora['server']['server'] . $agora['server']['base'] . $service.'/';
     }
     return false;
 }
