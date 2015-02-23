@@ -30,7 +30,7 @@ class script_moodle_register extends agora_script_base{
 
         $registeredhub = $registrationmanager->get_registeredhub($huburl);
 
-        if (!empty($registeredhub->token)) {
+        if (!empty($registeredhub->token) && $registeredhub->token != $CFG->siteidentifier) {
             require_once($CFG->dirroot . "/webservice/xmlrpc/lib.php");
             $serverurl = $huburl . "/local/hub/webservice/webservices.php";
             $xmlrpcclient = new webservice_xmlrpc_client($serverurl, $registeredhub->token);
