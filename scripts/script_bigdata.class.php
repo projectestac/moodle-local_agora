@@ -13,7 +13,7 @@ class script_bigdata extends agora_script_base{
 
 	public function params(){
 		$params = array();
-		$params['profilename'] = optional_param('profilename', false, PARAM_INT);
+		$params['profilename'] = optional_param('profilename', false, PARAM_TEXT);
 		return $params;
 	}
 
