@@ -37,83 +37,79 @@ class script_check_database extends agora_script_base{
 		$problemsfound = array();
 
         $lasttable = get_config('local_agora', 'lastcheckedtable');
+        $lastdir = get_config('local_agora', 'lastcheckeddir');
+        $log = get_config('local_agora', 'checktableslog');
         $startchecking = empty($lasttable);
+        $startcheckingdir = empty($lastdir);
 
         // And we nedd some ddl suff
         $dbman = $DB->get_manager();
         if ($XMLDB->dbdirs) {
-                $dbdirs = $XMLDB->dbdirs;
-            echo '<ul>';
+            $dbdirs = $XMLDB->dbdirs;
+            $log .= '<ul>';
             foreach ($dbdirs as $dbdir) {
                 // Only if the directory exists
                 if (!$dbdir->path_exists) {
                     continue;
                 }
-                // Load the XML file
-                $xmldb_file = new xmldb_file($dbdir->path . '/install.xml');
+                $checkpath = str_replace($CFG->dirroot . '/', '', $dbdir->path . '/install.xml');
+                if ($startcheckingdir) {
+                    // Load the XML file
+                    $xmldb_file = new xmldb_file($dbdir->path . '/install.xml');
 
-                // Only if the file exists
-                if (!$xmldb_file->fileExists()) {
-                    continue;
-                }
-                // Load the XML contents to structure
-                $loaded = $xmldb_file->loadXMLStructure();
-                if (!$loaded || !$xmldb_file->isLoaded()) {
-                    echo $OUTPUT->notification('Errors found in XMLDB file: '. $dbdir->path . '/install.xml');
-                    continue;
-                }
-                // Arriving here, everything is ok, get the XMLDB structure
-                $structure = $xmldb_file->getStructure();
-
-                echo '<li>' . str_replace($CFG->dirroot . '/', '', $dbdir->path . '/install.xml');
-                // Getting tables
-                if ($xmldb_tables = $structure->getTables()) {
-                    echo '<ul>';
-                    // Foreach table, process its fields
-                    foreach ($xmldb_tables as $xmldb_table) {
-                        $tablename = $xmldb_table->getName();
-
-                        if ($startchecking) {
-                            // Skip table if not exists
-                            if (!$dbman->table_exists($xmldb_table)) {
-                                continue;
-                            }
-                            // Fetch metadata from physical DB. All the columns info.
-                            if (!$metacolumns = $DB->get_columns($xmldb_table->getName(), false)) {
-                                // / Skip table if no metacolumns is available for it
-                                continue;
-                            }
-                            // Table processing starts here
-                            echo '<li>' . $tablename;
-                            // Do the specific check.
-                            list($output, $newproblems) = $this->check_table($xmldb_table, $metacolumns);
-                            if (empty($newproblems)) {
-                            	echo ' <font color="green">Ok</font>';
-                            } else {
-                            	echo $output;
-                            	$problemsfound = array_merge($problemsfound, $newproblems);
-                                if ($execute) {
-                                    $this->execute_sqls($newproblems);
-                                }
-                            }
-                            echo '</li>';
-                            // Give the script some more time (resetting to current if exists)
-                            if ($currenttl = @ini_get('max_execution_time')) {
-                                @ini_set('max_execution_time', $currenttl);
-                            }
-                            set_config('lastcheckedtable', $tablename, 'local_agora');
-                        } else {
-                            $startchecking = $tablename == $lasttable;
-                        }
+                    // Only if the file exists
+                    if (!$xmldb_file->fileExists()) {
+                        continue;
                     }
-                    echo '</ul>';
+
+                    $log .= '<li>Path: ' . $checkpath;
+                    // Load the XML contents to structure
+                    $loaded = $xmldb_file->loadXMLStructure();
+                    if (!$loaded || !$xmldb_file->isLoaded()) {
+                        $log .= $OUTPUT->notification('Errors found in XMLDB file: '. $dbdir->path . '/install.xml');
+                        continue;
+                    }
+                    // Arriving here, everything is ok, get the XMLDB structure
+                    $structure = $xmldb_file->getStructure();
+
+                    // Getting tables
+                    if ($xmldb_tables = $structure->getTables()) {
+                        $log .= '<ul>';
+                        // Foreach table, process its fields
+                        foreach ($xmldb_tables as $xmldb_table) {
+                            $tablename = $xmldb_table->getName();
+
+                            if ($startchecking) {
+                                list($output, $newproblems) = $this->execute_table($dbman, $xmldb_table, $execute);
+                                $problemsfound = array_merge($problemsfound, $newproblems);
+                                $log .= '<li>Tablename: ' . $tablename. ' '.$output .'</li>';
+                                // Give the script some more time (resetting to current if exists)
+                                if ($currenttl = @ini_get('max_execution_time')) {
+                                    @ini_set('max_execution_time', $currenttl);
+                                }
+                                set_config('lastcheckedtable', $tablename, 'local_agora');
+                                set_config('checktableslog', $log, 'local_agora');
+                            } else {
+                                $startchecking = $tablename == $lasttable;
+                            }
+                        }
+                        $log .= '</ul>';
+                    }
+                    $log .= '</li>';
+
+                    set_config('lastcheckeddir', $checkpath, 'local_agora');
+                    set_config('checktableslog', $log, 'local_agora');
+                } else {
+                    $startcheckingdir = $checkpath == $lastdir;
                 }
-                echo '</li>';
             }
-            echo '</ul>';
+            $log .= '</ul>';
         }
 
+        echo $log;
         unset_config('lastcheckedtable', 'local_agora');
+        unset_config('lastcheckeddir', 'local_agora');
+        unset_config('checktableslog', 'local_agora');
 
         $sqls = array();
         foreach ($problemsfound as $i => $problem) {
@@ -130,23 +126,61 @@ class script_check_database extends agora_script_base{
 		return empty($problemsfound);
 	}
 
+    protected function execute_table($dbman, $xmldb_table, $execute) {
+        global $DB;
+
+        // Skip table if not exists
+        if (!$dbman->table_exists($xmldb_table)) {
+            return array('<font color="red">Table does not exists</font>', array());
+        }
+        // Fetch metadata from physical DB. All the columns info.
+        if (!$metacolumns = $DB->get_columns($xmldb_table->getName(), false)) {
+            // / Skip table if no metacolumns is available for it
+            return array('<font color="red">No metacolumns avalaible</font>', array());
+        }
+        // Table processing starts here
+        // Do the specific check.
+        list($output, $newproblems) = $this->check_table($xmldb_table, $metacolumns);
+        if (empty($newproblems)) {
+            return array('<font color="green">Ok</font>', $newproblems);
+        } else {
+            if ($execute) {
+                $output .= $this->execute_sqls($newproblems);
+            }
+            return array($output, $newproblems);
+        }
+
+    }
+
     protected function execute_sqls($sqls) {
         global $CFG, $DB, $OUTPUT;
         $dbman = $DB->get_manager();
+        $output = "";
         foreach ($sqls as $sql) {
             if(!empty($sql)) {
                 try {
-                    print_object($sql);
+                    $output .= $this->print_object($sql);
                     if ($CFG->dbtype != 'oci' && $CFG->dbtype != 'oci8po') {
                         $sql = $dbman->generator->getEndedStatements($sql);
                     }
                     $DB->execute($sql);
-                    echo $OUTPUT->notification('OK', 'notifysuccess');
+                    $output .=  $OUTPUT->notification('OK', 'notifysuccess');
                 } catch(Exception $e) {
-                    echo $OUTPUT->notification($e->getMessage());
-                    print_object($e->debuginfo);
+                    $output .=  $OUTPUT->notification($e->getMessage());
+                    $output .= $this->print_object($e->debuginfo);
                 }
             }
+        }
+        return $output;
+    }
+
+    protected function print_object($object) {
+        raise_memory_limit(MEMORY_EXTRA);
+
+        if (CLI_SCRIPT) {
+            return print_r($object, true) ."\n";
+        } else {
+            return html_writer::tag('pre', s(print_r($object, true)), array('class' => 'notifytiny'));
         }
     }
 
