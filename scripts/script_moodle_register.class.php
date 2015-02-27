@@ -78,6 +78,9 @@ class script_moodle_register extends agora_script_base{
         $sitename = format_string($fullname, true, array('context' => context_course::instance(SITEID)));
         set_config('site_name_' . $cleanhuburl, $sitename, 'hub');
         $sitedescription = html_to_text($site->summary);
+        if(empty($sitedescription)) {
+            $sitedescription = 'Moodle';
+        }
         set_config('site_description_' . $cleanhuburl, $sitedescription, 'hub');
         $contactname = 'Administrador/a XTEC';
         set_config('site_contactname_' . $cleanhuburl, $contactname, 'hub');
