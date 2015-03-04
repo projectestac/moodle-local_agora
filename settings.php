@@ -24,9 +24,16 @@ if ($hassiteconfig) {
     $ADMIN->add('localplugins', $settings);
 
     if (is_xtecadmin() || (!is_agora() && is_siteadmin())) {
+        $settings->add(new admin_setting_heading('mailer', get_string('mailer', 'local_agora'), ''));
         require_once ($CFG->dirroot.'/local/agora/mailer/mailsender.class.php');
         $settings->add(new admin_setting_configtext('local_agora/environment_url', get_string('environment_url', 'local_agora'),
             get_string('environment_url_desc', 'local_agora', $CFG->apligestenv), '' , PARAM_URL));
+
+        $checkedyesno = array(''=>get_string('no'), '1'=>get_string('yes')); // not nice at all
+        $settings->add(new admin_setting_configselect('apligestlog', get_string('apligestlog', 'local_agora'), '', '', $checkedyesno));
+        $settings->add(new admin_setting_configselect('apligestlogdebug', get_string('apligestlogdebug', 'local_agora'), '', '', $checkedyesno));
+        $default = get_admin_datadir_folder('log').'/mailsender.log';
+        $settings->add(new admin_setting_configtext('apligestlogpath', get_string('apligestlogpath', 'local_agora'), '', $default, PARAM_TEXT));
     }
 
 }
