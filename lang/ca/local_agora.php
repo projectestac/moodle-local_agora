@@ -33,6 +33,8 @@ $string['agora_scripts'] = 'Àgora Scripts';
 $string['login_nodes'] = 'Entra a Nodes';
 
 $string['mailer'] = 'Mailer';
+$string['apligestmail'] = 'Activa el Mailer';
+$string['mailheader'] = 'Afegeix prefix als assumptes';
 $string['apligestlog'] = 'Activa el Log';
 $string['apligestlogdebug'] = 'Activa el Debug Log';
 $string['apligestlogpath'] = 'Camí de Log';
