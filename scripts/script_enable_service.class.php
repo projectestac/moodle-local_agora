@@ -88,6 +88,11 @@ fontselect,fontsizeselect,code,search,replace,wrap,cleanup,removeformat,pastetex
         $rcommonlogdir = get_admin_datadir_folder();
         set_config('data_store_log', $rcommonlogdir, 'rcommon');
 
+        // Solve error on Upgrade Bigdata
+        if (!$DB->get_manager()->table_exists('bigdata_profiles')) {
+            unset_config('version', 'local_bigdata');
+        }
+
         // Upgrade Moodle
         require_once('script_upgrade_moodle.class.php');
         $script = new script_upgrade_moodle();
@@ -99,6 +104,7 @@ fontselect,fontsizeselect,code,search,replace,wrap,cleanup,removeformat,pastetex
             $script = new script_moodle_register();
             $script->execute(array('disable' => 0));
         }*/
+
 
         purge_all_caches();
         return $success;
