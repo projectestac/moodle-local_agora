@@ -93,12 +93,12 @@ fontselect,fontsizeselect,code,search,replace,wrap,cleanup,removeformat,pastetex
         $script = new script_upgrade_moodle();
         $success = $script->execute(array());
 
-        if ($success) {
+        /*if ($success) {
             // Autoregister Moodle
             require_once('script_moodle_register.class.php');
             $script = new script_moodle_register();
             $script->execute(array('disable' => 0));
-        }
+        }*/
 
         purge_all_caches();
         return $success;
