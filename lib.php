@@ -300,7 +300,7 @@ function is_service_enabled($service) {
 
 function get_service_url($service) {
     global $agora;
-    if (is_service_enabled($service)) {
+    if (isset($agora['server']) && is_service_enabled($service)) {
         if ($service == 'nodes') {
             return $agora['server']['server'] . $agora['server']['base'];
         }
