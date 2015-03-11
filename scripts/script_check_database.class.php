@@ -42,10 +42,11 @@ class script_check_database extends agora_script_base{
         $startchecking = empty($lasttable);
         $startcheckingdir = empty($lastdir);
 
-        $folder = get_admin_datadir_folder();
-        $this->handler = fopen($folder.'/checkdblog.txt', "a+");
+        $folder = get_moodle2_admin_datadir_folder('checkdblog');
+        $filename = $folder.'/checkdblog-'.$CFG->siteidentifier.'.txt';
+        $this->handler = fopen($filename, "a+");
         if (!$this->handler) {
-            throw new Exception('Cannot open file '.$folder.'/checkdblog.txt');
+            throw new Exception('Cannot open file '.$filename);
         }
         $this->log(time());
 
@@ -112,7 +113,7 @@ class script_check_database extends agora_script_base{
             $this->log('</ul>');
         }
 
-        fclose($filehandler);
+        fclose($this->handler);
         unset_config('lastcheckedtable', 'local_agora');
         unset_config('lastcheckeddir', 'local_agora');
 
