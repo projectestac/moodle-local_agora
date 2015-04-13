@@ -299,12 +299,13 @@ function is_service_enabled($service) {
 }
 
 function get_service_url($service) {
-    global $agora;
+    global $agora, $CFG;
     if (isset($agora['server']) && is_service_enabled($service)) {
+        $dns = $agora['server']['server'] . $agora['server']['base'].$CFG->dnscentre.'/';
         if ($service == 'nodes') {
-            return $agora['server']['server'] . $agora['server']['base'];
+            return $dns;
         }
-        return $agora['server']['server'] . $agora['server']['base'] . $service.'/';
+        return $dns . $service.'/';
     }
     return false;
 }
