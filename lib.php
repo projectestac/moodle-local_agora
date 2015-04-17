@@ -386,8 +386,6 @@ function get_moodle2_admin_datadir_folder($folder = '', $exceptiononerror = true
     return $directory;
 }
 
-
-
 function get_mailsender() {
     global $mailsender, $CFG;
     require_once($CFG->dirroot.'/local/agora/mailer/mailsender.class.php');
@@ -406,10 +404,14 @@ function get_mailsender() {
             set_config('apligestlogpath', $CFG->apligestlogpath);
         }
         $mailsender = new mailsender($CFG->apligestaplic, $CFG->noreplyaddress, 'educacio', $wsdl, $CFG->apligestlog, $CFG->apligestlogdebug, $CFG->apligestlogpath);
-    } catch (Exception $e){
-        mtrace('ERROR: Cannot initialize mailsender, no mail will be sent.');
-        mtrace($e->getMessage());
-        mtrace('The execution must go on!');
+    } catch (Exception $e) {
+        if (CLI_SCRIPT) {
+            mtrace('ERROR: Cannot initialize mailsender, no mail will be sent.');
+            mtrace($e->getMessage());
+            mtrace('The execution must go on!');
+        } else {
+            debugging('ERROR: Cannot initialize mailsender, no mail will be sent. <br> '.$e->getMessage(), DEBUG_NORMAL);
+        }
         $mailsender = false;
     }
     return $mailsender;
@@ -431,7 +433,8 @@ function send_apligest_mail($mail, $user) {
         }
 
         // Load the message
-        $message = new message(TEXTHTML, $CFG->apligestlog, $CFG->apligestlogdebug, $CFG->apligestlogpath);
+        $type = $mail->ContentType == 'text/plain' ? TEXTPLAIN : TEXTHTML;
+        $message = new message($type, $CFG->apligestlog, $CFG->apligestlogdebug, $CFG->apligestlogpath);
 
         // Set $to
         $toarray = array();
