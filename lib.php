@@ -226,16 +226,9 @@ function is_rush_hour() {
 function is_enabled_in_agora ($mod) {
     if (is_agora()) {
 
-        // Only enabled in EOI Moodles
-        if (!is_eoi() && ($mod == 'eoicampus')) {
-            return false;
-        }
-
         // Disabled in all Agora Moodles
-        if ($mod == 'clean' || $mod == 'afterburner' || $mod == 'anomaly' || $mod == 'arialist' || $mod == 'base' || $mod == 'binarius' || $mod == 'boxxie' || $mod == 'brick' ||
-            $mod == 'canvas' || $mod == 'formal_white' || $mod == 'formfactor' || $mod == 'fusion' || $mod == 'leatherbound' || $mod == 'magazine' || $mod == 'nimble' ||
-            $mod == 'nonzero' || $mod == 'overlay' || $mod == 'serenity' || $mod == 'sky_high' || $mod == 'splash' || $mod == 'standard' || $mod == 'standardold' ||
-            $mod == 'chat' || $mod == 'alfresco' || $mod == 'rscorm' || $mod == 'rscormreport_basic' || $mod == 'rscormreport_graphs' || $mod == 'rscormreport_interactions') {
+        if ($mod == 'clean' || $mod == 'more' || $mod == 'canvas' || $mod == 'base' ||
+            $mod == 'chat' || $mod == 'alfresco') {
             return false;
         }
     }
