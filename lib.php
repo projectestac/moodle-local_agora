@@ -401,11 +401,12 @@ function get_mailsender() {
     return $mailsender;
 }
 
-function send_apligest_mail($mail, $user) {
+function send_apligest_mail(&$mail, $user) {
     global $CFG;
     try {
         $sender = get_mailsender();
         if (!$sender) {
+            $mail->ErrorInfo = 'Cannot initialize mailsender, no mail will be sent';
             return false;
         }
 
@@ -453,24 +454,21 @@ function send_apligest_mail($mail, $user) {
 
         // Add message to mailsender
         if (!$sender->add($message)) {
-            mtrace('ERROR: '.' Impossible to add message to mailsender');
-            add_to_log(SITEID, 'library', 'mailer', qualified_me(), 'ERROR: '. ' Impossible to add message to mailsender');
+            $mail->ErrorInfo = 'Impossible to add message to mailsender';
             return false;
         }
 
         // Send messages
         if (!$sender->send_mail()) {
-            mtrace('ERROR: '.' Impossible to send messages');
-            add_to_log(SITEID, 'library', 'mailer', qualified_me(), 'ERROR: '. ' Impossible to send messages');
+            $mail->ErrorInfo = 'Impossible to send messages';
             return false;
         } else {
-            set_send_count($user);
             return true;
         }
     } catch (Exception $e){
-        mtrace('ERROR: Something terrible happened during the mailing and might be repaired');
-        mtrace($e->getMessage());
-        mtrace('The execution must go on!');
+        $mail->ErrorInfo = 'Exception: '. $e->getMessage();
         return false;
     }
 }
+
+
