@@ -132,30 +132,85 @@ function run_cli($command, $outputfile = false, $append = true, $background = tr
     return $returnvar;
 }
 
+function check_cron_run() {
+    if (!empty($CFG->cronclionly)) {
+        $nocli = optional_param('nocli', false, PARAM_BOOL);
+        if (!$nocli) {
+            run_cli_cron();
+            exit(0);
+        }
+    } else {
+        $cli = optional_param('cli', false, PARAM_BOOL);
+        if ($cli) {
+            run_cli_cron();
+            exit(0);
+        }
+    }
+    $CFG->cronclionly = false;
+}
+
 // Executes a cron via CLI
 function run_cli_cron($background = true) {
     global $CFG, $DB;
 
+    if (!empty($CFG->cronremotepassword)) {
+        $pass = optional_param('password', '', PARAM_RAW);
+        if ($pass != $CFG->cronremotepassword) {
+            // wrong password.
+            print_error('cronerrorpassword', 'admin');
+            exit(1);
+        }
+    }
+
+    if (CLI_MAINTENANCE) {
+        echo "CLI maintenance mode active, cron execution suspended.\n";
+        exit(1);
+    }
+
+    if (moodle_needs_upgrading()) {
+        echo "Moodle upgrade pending, cron execution suspended.\n";
+        exit(1);
+    }
+
     $command = $CFG->admin.'/cli/cron.php';
 
+    $force = optional_param('forcecron', false, PARAM_BOOL);
+    if (!$force) {
+        $cronstart = get_config(null, 'cronstart');
+        $cronperiod = 900; // 15 minutes minimum
+        if ($cronstart + $cronperiod > time()) {
+            echo "Moodle cron was executed recently.\n";
+            exit(1);
+        }
+    } else {
+        $command .= ' --forcecron=true';
+        echo "Moodle cron forced.\n";
+    }
+
     $outputfile = false;
-    $savecronlog = $DB->get_field('config', 'value', array('name' => 'savecronlog'));
-    // $CFG->savecronlog must be saved on DB
-    if (isset($savecronlog) && !empty($savecronlog)) {
+    if (isset($CFG->savecronlog)) {
+        $savecronlog = $CFG->savecronlog;
+    } else {
+        $savecronlog = $DB->get_field('config', 'value', array('name' => 'savecronlog'));
+    }
+    if (!empty($savecronlog)) {
         $outputdir = get_admin_datadir_folder('crons', false);
         if ($outputdir) {
             $outputfile = $outputdir.'/cron_'.$CFG->siteidentifier.'_'.date("Ymd").'.log';
         }
 
-        //Erase old files
+        // Erase old files
         $search = $outputdir.'/cron_'.$CFG->siteidentifier.'_'.date("Ym", strtotime("-2 month"));
         foreach (glob($search.'*.log') as $filename) {
-           unlink($filename);
+            unlink($filename);
         }
         $outputfile = $outputdir.'/cron_'.$CFG->siteidentifier.'_'.date("Ymd").'.log';
     }
     $append = true;
-    return run_cli($command, $outputfile, $append, $background);
+
+    mtrace('Cron is being executing in background by CLI...');
+
+    run_cli($command, $outputfile, $append, $background);
 }
 
 /**
