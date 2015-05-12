@@ -280,7 +280,6 @@ function is_rush_hour() {
  **/
 function is_enabled_in_agora ($mod) {
     if (is_agora()) {
-
         // Disabled in all Agora Moodles
         if ($mod == 'clean' || $mod == 'more' || $mod == 'canvas' || $mod == 'base' ||
             $mod == 'chat' || $mod == 'alfresco') {
