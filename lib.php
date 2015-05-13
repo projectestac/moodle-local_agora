@@ -5,11 +5,6 @@ function is_agora() {
     return isset($CFG->isagora) && $CFG->isagora;
 }
 
-function is_marsupial() {
-    global $CFG;
-    return isset($CFG->ismarsupial) && $CFG->ismarsupial;
-}
-
 function is_eoi() {
     global $CFG;
     return isset($CFG->iseoi) && $CFG->iseoi;
@@ -231,10 +226,6 @@ function is_rush_hour() {
 function is_enabled_in_agora ($mod) {
     if (is_agora()) {
 
-        // Only enabled in marsupial Moodles
-        if (!is_marsupial() && ($mod == 'rcontent' || $mod == 'rscorm' || $mod == 'atria' || $mod == 'rcommon' || $mod == 'my_books' || $mod == 'rgrade')) {
-            return false;
-        }
         // Only enabled in EOI Moodles
         if (!is_eoi() && ($mod == 'eoicampus')) {
             return false;
