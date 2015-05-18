@@ -272,7 +272,6 @@ function is_rush_hour() {
 
 /**
  * Check if specified module/block name is enabled
- * @global Object $CFG
  * @param String $mod module name
  * @return Boolean True if specified module name is enabled and false otherwise.
  *
@@ -289,48 +288,19 @@ function is_enabled_in_agora ($mod) {
     return true;
 }
 
-
-function agora_course_print_navlinks($course, $section = 0) {
-    global $CFG, $OUTPUT;
-    $context = context_course::instance($course->id, MUST_EXIST);
-    echo '<div class="agora_navbar">';
-    // Show reports
-    $reportavailable = false;
-    if (!empty($course->showgrades)) {
-        if (has_capability('moodle/grade:viewall', $context)) {
-            $reportavailable = true;
-        } else {
-            if ($reports = core_component::get_plugin_list('gradereport')) {     // Get all installed reports
-                arsort($reports); // user is last, we want to test it first
-                foreach ($reports as $plugin => $pluginname) {
-                    if (has_capability('gradereport/' . $plugin . ':view', $context)) {
-                        // Stop when the first visible plugin is found
-                        $reportavailable = true;
-                        break;
-                    }
-                }
-            }
-        }
-    }
-    if ($reportavailable) {
-        $icon = $OUTPUT->pix_icon('i/grades', "");
-        echo html_writer::link($CFG->wwwroot.'/grade/report/index.php?id=' . $course->id, $icon.get_string('grades'));
-    }
-    echo '</div>';
-}
-
 function local_agora_extends_navigation(global_navigation $navigation) {
     global $DB, $CFG;
     if (isloggedin() && is_service_enabled('nodes') && $DB->record_exists('oauth_clients', array('client_id' => 'nodes'))) {
         $nodesurl = $CFG->wwwroot.'/local/agora/login_service.php?service=nodes';
-        $navigation->add(get_string('login_nodes', 'local_agora'), $nodesurl, navigation_node::TYPE_SETTING, null, get_string('login_nodes', 'local_agora'));
-        //$message->icon = 'i/email';
-
+        $icon = new pix_icon('i/permissions', "");
+        $navigation->add(get_string('login_nodes', 'local_agora'), $nodesurl, navigation_node::TYPE_SETTING, null, get_string('login_nodes', 'local_agora'), $icon);
     }
 }
 
 function is_service_enabled($service) {
-    if(!is_agora()) return false;
+    if (!is_agora()) {
+        return false;
+    }
 
     global $school_info;
     return isset($school_info['id_'.$service]) && !empty($school_info['id_'.$service]);
@@ -519,10 +489,114 @@ function send_apligest_mail(&$mail, $user) {
         } else {
             return true;
         }
-    } catch (Exception $e){
+    } catch (Exception $e) {
         $mail->ErrorInfo = 'Exception: '. $e->getMessage();
         return false;
     }
 }
 
+function get_colors_from_nodes($solveerrors = false) {
+    $colors = array();
+    $colors['color2'] = '#AC2013';
+    $colors['color4'] = '#303030';
+    $colors['color5'] = '#AC2013';
 
+    try {
+        $filename = INSTALL_BASE.'/html/wordpress/wp-content/themes/reactor-primaria-1/custom-tac/colors_nodes.php';
+        if (file_exists($filename)) {
+            global $colors_nodes;
+            $db = external_db('nodes');
+            $options = $db->get_field('options', 'option_value', array('option_name' => 'reactor_options'));
+            $options = unserialize($options);
+            $paleta = $options['paleta_colors'];
+
+            require_once($filename);
+            $paleta = $colors_nodes[$paleta];
+            $colors['color2'] = $paleta['primary'];
+            $colors['color4'] = $paleta['secondary'];
+            $colors['color5'] = isset($paleta['link']) ? $paleta['link'] : $paleta['secondary'];
+            if ($solveerrors) {
+                set_config('color2', $color2, 'theme_xtec2');
+                set_config('color4', $color4, 'theme_xtec2');
+                set_config('color5', $color5, 'theme_xtec2');
+            }
+            //$db->dispose();
+            return $colors;
+        }
+    } catch (Exception $e) {
+        // Nothing to do
+    }
+
+    if ($solveerrors) {
+        set_config('colorset', 'grana', 'theme_xtec2');
+        set_config('color2', $colors['color2'], 'theme_xtec2');
+        set_config('color4', $colors['color4'], 'theme_xtec2');
+        set_config('color5', $colors['color5'], 'theme_xtec2');
+        return $colors;
+    }
+    return false;
+}
+
+
+/**
+ * Connecta a una base de dades configurada d'un servei
+ *
+ * @param string shortname de la taula que vulguem consultar
+ * @return  moodle_database
+ */
+function external_db($service) {
+    global $DBHANDLERS, $school_info, $agora;
+
+    //Es comprova si en la cache de handlers ja existeix el solicitat
+    if (!isset($DBHANDLERS)) {
+        $DBHANDLERS = array();
+    }
+    if (isset($DBHANDLERS[$service])) {
+        return $DBHANDLERS[$service];
+    }
+
+    if (!is_service_enabled($service)) {
+        $DBHANDLERS[$service] = false;
+        return false;
+    }
+
+    $options = array();
+    $options['dbpersist'] = false;
+    if (isset($agora[$service]['port']) && !empty($agora[$service]['port'])) {
+        $options['dbport'] = $agora[$service]['port'];
+    }
+
+    // Per ara només farem servir aquestes, per ampliar-ho caldria afegir aquest paràmetre a la taula
+    $library = 'native';
+    $dbtype = $agora[$service]['dbtype'];
+    if ($dbtype == 'mysql') {
+        $dbtype = 'mysqli';
+    }
+
+    if (!$handler = moodle_database::get_driver_instance($dbtype, $library, true)) {
+        throw new dml_exception('dbdriverproblem', "Unknown driver $library/$dbtype");
+    }
+
+    $host = $school_info['dbhost_'.$service];
+    $username = $agora[$service]['username'];
+    $password = $agora[$service]['userpwd'];
+    $prefix = $agora[$service]['prefix'].'_';
+    $dbname = $agora[$service]['userprefix'].$school_info['id_'.$service];
+
+    try {
+        if ($handler->connect($host, $username, $password, $dbname, $prefix, $options)) {
+            $DBHANDLERS[$service] = $handler;
+        } else {
+            $DBHANDLERS[$service] = false;
+            return false;
+
+        }
+    } catch (Exception $e) {
+        debugging('Error connecting external DB '.$service);
+        debugging($e->getMessage());
+        $DBHANDLERS[$service] = false;
+        return false;
+    }
+
+    return $handler;
+}
