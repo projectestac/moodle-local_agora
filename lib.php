@@ -20,9 +20,8 @@ function is_xtecadmin($user=null) {
     if (empty($user)) {
         $user = $USER;
     }
-    return isset($user)
-           && array_key_exists('username', $user)
-           && $user->username == 'xtecadmin';
+
+    return isset($user->username) && $user->username == 'xtecadmin';
 }
 
 function require_xtecadmin($canbesiteadmin = false) {
