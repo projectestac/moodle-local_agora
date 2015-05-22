@@ -48,6 +48,11 @@ class script_enable_service extends agora_script_base{
         set_user_preference('auth_forcepasswordchange', 1, $adminuser);
         mtrace('Usuari admin configurat', '<br/>');
 
+        // Upgrade Moodle
+        require_once('script_restore_xtecadmin.class.php');
+        $script = new script_restore_xtecadmin();
+        $success = $script->execute(array());
+
         // Update site name and site description
         $maincourse = $DB->get_record('course', array('id' => SITEID));
         if (!$maincourse) {
