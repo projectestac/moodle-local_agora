@@ -495,10 +495,6 @@ function send_apligest_mail(&$mail, $user) {
 }
 
 function get_colors_from_nodes($solveerrors = false) {
-    $colors = array();
-    $colors['color2'] = '#AC2013';
-    $colors['color4'] = '#303030';
-    $colors['color5'] = '#AC2013';
 
     try {
         $filename = INSTALL_BASE.'/html/wordpress/wp-content/themes/reactor-primaria-1/custom-tac/colors_nodes.php';
@@ -511,13 +507,15 @@ function get_colors_from_nodes($solveerrors = false) {
 
             require_once($filename);
             $paleta = $colors_nodes[$paleta];
-            $colors['color2'] = $paleta['primary'];
-            $colors['color4'] = $paleta['secondary'];
-            $colors['color5'] = isset($paleta['link']) ? $paleta['link'] : $paleta['secondary'];
+            $colors = array(
+                'color' => $paleta['secondary'],
+                'logo_color' => $paleta['primary']
+            );
             if ($solveerrors) {
-                set_config('color2', $color2, 'theme_xtec2');
-                set_config('color4', $color4, 'theme_xtec2');
-                set_config('color5', $color5, 'theme_xtec2');
+                set_config('color2', $colors['color'], 'theme_xtec2');
+                set_config('color4', $colors['color'], 'theme_xtec2');
+                set_config('color5', $colors['color'], 'theme_xtec2');
+                set_config('logo_color', $colors['logo_color'], 'theme_xtec2');
             }
             //$db->dispose();
             return $colors;
@@ -528,10 +526,9 @@ function get_colors_from_nodes($solveerrors = false) {
 
     if ($solveerrors) {
         set_config('colorset', 'grana', 'theme_xtec2');
-        set_config('color2', $colors['color2'], 'theme_xtec2');
-        set_config('color4', $colors['color4'], 'theme_xtec2');
-        set_config('color5', $colors['color5'], 'theme_xtec2');
-        return $colors;
+        set_config('color2', '#AC2013', 'theme_xtec2');
+        set_config('color4', '#303030', 'theme_xtec2');
+        set_config('color5', '#AC2013', 'theme_xtec2');
     }
     return false;
 }
