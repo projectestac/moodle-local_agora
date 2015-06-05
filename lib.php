@@ -132,6 +132,7 @@ function run_cli($command, $outputfile = false, $append = true, $background = tr
 }
 
 function check_cron_run() {
+    global $CFG;
     if (!empty($CFG->cronclionly)) {
         $nocli = optional_param('nocli', false, PARAM_BOOL);
         if (!$nocli) {
