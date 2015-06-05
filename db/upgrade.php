@@ -200,6 +200,36 @@ mybadges,badges|/badges/mybadges.php|award");
     }
 
 
+    if ($oldversion < 2015060501) {
+        uninstall_plugin('block', 'advices');
+        uninstall_plugin('block', 'rcommon');
+        uninstall_plugin('rscormreport', 'basic');
+        uninstall_plugin('rscormreport', 'graphs');
+        uninstall_plugin('rscormreport', 'interactions');
+        uninstall_plugin('mod', 'rscorm');
+        uninstall_plugin('editor', 'tinymce');
+        uninstall_plugin('tinymce', 'ctrlhelp');
+        uninstall_plugin('tinymce', 'dragmath');
+        uninstall_plugin('tinymce', 'managefiles');
+        uninstall_plugin('tinymce', 'moodleemoticon');
+        uninstall_plugin('tinymce', 'moodleimage');
+        uninstall_plugin('tinymce', 'moodlemedia');
+        uninstall_plugin('tinymce', 'moodlenolink');
+        uninstall_plugin('tinymce', 'pdw');
+        uninstall_plugin('tinymce', 'spellchecker');
+        uninstall_plugin('tinymce', 'tiny_mce_wiris');
+        uninstall_plugin('tinymce', 'wrap');
+
+        // Delete block advices table
+        $table = new xmldb_table('block_advices');
+        if ($dbman->table_exists($table)) {
+            $dbman->drop_table($table);
+        }
+
+        upgrade_plugin_savepoint(true, 2015060501, 'local', 'agora');
+    }
+
+
 
     return true;
 }
