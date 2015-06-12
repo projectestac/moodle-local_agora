@@ -78,6 +78,21 @@ myfiles,moodle|/user/files.php|download
 mybadges,badges|/badges/mybadges.php|award");
         set_config('alternativefullnameformat', 'language');
 
+        set_config('toolbar', 'collapse = collapse
+style1 = title, bold, italic, underline
+list = unorderedlist, orderedlist
+links = link
+files = image, media, managefiles
+undo = undo
+style3 = fontfamily, fontsize, fontcolor, backcolor, clear
+style2 = strike, subscript, superscript
+align = align
+indent = indent
+insert = equation, charmap, table
+accessibility = accessibilitychecker, accessibilityhelper
+other = html
+math = wiris', 'editor_atto');
+
         set_config('texteditors', 'atto,textarea');
         set_config('autosavefrequency', 60, 'editor_atto');
 
