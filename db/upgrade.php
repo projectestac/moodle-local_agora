@@ -74,7 +74,6 @@ function xmldb_local_agora_upgrade($oldversion) {
 
     if ($oldversion < 2015060500) {
         set_config('customusermenuitems', "messages,message|/message/index.php|message
-myfiles,moodle|/user/files.php|download
 mybadges,badges|/badges/mybadges.php|award");
         set_config('alternativefullnameformat', 'language');
 
@@ -242,6 +241,14 @@ math = wiris', 'editor_atto');
         }
 
         upgrade_plugin_savepoint(true, 2015060501, 'local', 'agora');
+    }
+
+    if ($oldversion < 2015061600) {
+        set_config('customusermenuitems', "messages,message|/message/index.php|message
+mybadges,badges|/badges/mybadges.php|award");
+        set_config('alternativefullnameformat', 'language');
+
+        upgrade_plugin_savepoint(true, 2015061600, 'local', 'agora');
     }
 
 
