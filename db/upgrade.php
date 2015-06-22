@@ -251,6 +251,12 @@ mybadges,badges|/badges/mybadges.php|award");
         upgrade_plugin_savepoint(true, 2015061600, 'local', 'agora');
     }
 
+    if ($oldversion < 2015062200) {
+        set_config('grade_report_showcalculations', 1);
+
+        upgrade_plugin_savepoint(true, 2015062200, 'local', 'agora');
+    }
+
 
 
     return true;
