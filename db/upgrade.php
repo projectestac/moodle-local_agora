@@ -257,6 +257,21 @@ mybadges,badges|/badges/mybadges.php|award");
         upgrade_plugin_savepoint(true, 2015062200, 'local', 'agora');
     }
 
+    if ($oldversion < 2015071300) {
+
+        // Define index notification (not unique) to be added to message_read.
+        $table = new xmldb_table('message_read');
+        $index = new xmldb_index('notification', XMLDB_INDEX_NOTUNIQUE, array('notification'));
+
+        // Conditionally launch add index notification.
+        if (!$dbman->index_exists($table, $index)) {
+            $dbman->add_index($table, $index);
+        }
+
+        // Main savepoint reached.
+        upgrade_plugin_savepoint(true, 2015071300, 'local', 'agora');
+    }
+
 
 
     return true;
