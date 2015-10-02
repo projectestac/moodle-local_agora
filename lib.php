@@ -408,7 +408,7 @@ function get_mailsender() {
 
     try {
         if (empty($CFG->apligestlogpath)) {
-            $CFG->apligestlogpath = get_admin_datadir_folder('log').'/mailsender.log';
+            $CFG->apligestlogpath = get_admin_datadir_folder('log');
             set_config('apligestlogpath', $CFG->apligestlogpath);
         }
         $mailsender = new mailsender($CFG->apligestaplic, $CFG->noreplyaddress, 'educacio', $wsdl, $CFG->apligestlog, $CFG->apligestlogdebug, $CFG->apligestlogpath);
@@ -437,7 +437,7 @@ function send_apligest_mail(&$mail, $user) {
         require_once($CFG->dirroot.'/local/agora/mailer/message.class.php');
 
         if (empty($CFG->apligestlogpath)) {
-            $CFG->apligestlogpath = get_admin_datadir_folder('log').'/mailsender.log';
+            $CFG->apligestlogpath = get_admin_datadir_folder('log');
             set_config('apligestlogpath', $CFG->apligestlogpath);
         }
 
