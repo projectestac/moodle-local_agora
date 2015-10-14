@@ -25,13 +25,13 @@ class script_filesystem_cleanup extends agora_script_base{
 		$directory = $CFG->dataroot . '/filedir';
         $fsfiles = self::get_files($directory);
 
-        $config = get_config('backup');
+        /*$config = get_config('backup');
         $directory = $config->backup_auto_destination;
         if (!empty($directory)) {
             $backupfiles = $this->get_files($directory);
             $fsfiles = array_merge($fsfiles, $backupfiles);
             unset($backupfiles);
-        }
+        }*/
 
         $files = $DB->get_fieldset_sql('SELECT DISTINCT contenthash from {files}');
         $dbfiles = array();
@@ -62,7 +62,7 @@ class script_filesystem_cleanup extends agora_script_base{
         foreach ($iterator as $fileinfo) {
             if ($fileinfo->isFile()) {
                 $file = (string) $fileinfo->getFilename();
-            $filenames[$file] = $file;
+                $filenames[$file] = $file;
             }
         }
         return $filenames;
