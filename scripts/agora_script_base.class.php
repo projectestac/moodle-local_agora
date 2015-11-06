@@ -165,6 +165,9 @@ class agora_script_base{
         } else {
         	global $OUTPUT;
         	switch ($type) {
+        		case 'INFO' :
+        			echo $OUTPUT->notification($message, 'notifymessage');
+        			return;
 				case 'ERROR':
 					echo $OUTPUT->notification($message);
 					return;
