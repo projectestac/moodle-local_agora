@@ -8,6 +8,7 @@ class agora_script_base{
 	public $cli = false;
 	public $api = true;
 	protected $test = true;
+	protected $category = "Misc";
 
 	public function params() {
 		$params = array();
@@ -78,6 +79,10 @@ class agora_script_base{
 			}
 		}
 		return false;
+	}
+
+	public function get_category() {
+		return $this->category;
 	}
 
 	protected function _execute($params = array(), $execute = true) {

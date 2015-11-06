@@ -10,8 +10,7 @@ class script_filesystem_cleanup extends agora_script_base{
 	protected $test = true;
 	public $cli = true;
 	public $api = true;
-
-
+    protected $category = "Check and repair";
 
 	protected function _execute($params = array(), $execute = true) {
 		global $DB, $CFG;
