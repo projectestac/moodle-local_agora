@@ -175,6 +175,7 @@ class agora_script_base{
         $function = 'script_'.$function;
         $filename = $function.'.class.php';
         if (!file_exists($filename)) {
+        	$this->output("File $filename does not exists", 'ERROR');
             return false;
         }
         require_once($filename);
