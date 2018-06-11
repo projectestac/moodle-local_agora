@@ -526,6 +526,16 @@ defined('MOODLE_INTERNAL') || die();
         'staticacceleration' => true,
         'staticaccelerationsize' => 1,
     ),
+    'tool_mobile' =>
+        array(
+        'mode' => 1,
+        'component'=>'tool_mobile',
+        'area'=>'stepdata',
+        'simplekeys' => true,
+        'simpledata' => true,
+        'staticacceleration' => true,
+        'staticaccelerationsize' => 1,
+    ),
     'core/message_processors_enabled' => 
       array(
         'mode' => 1,
@@ -551,6 +561,66 @@ defined('MOODLE_INTERNAL') || die();
           'mode' => 1,
           'component' => 'core',
           'area' => 'coursecompletion',
+          'simplekeys' => true,
+          'simpledata' => true,
+          'staticacceleration' => true,
+          'staticaccelerationsize' => 3
+      ),
+    'core/contextwithinsights' =>
+      array(
+          'mode' => 1,
+          'component' => 'core',
+          'area' => 'contextwithinsights',
+          'simplekeys' => true,
+          'simpledata' => true,
+          'staticacceleration' => true,
+          'staticaccelerationsize' => 3
+      ),
+      'core/calendar_categories' =>
+       array(
+          'mode' => 1,
+          'component' => 'core',
+          'area' => 'calendar_categories',
+          'simplekeys' => true,
+          'simpledata' => true,
+          'staticacceleration' => true,
+          'staticaccelerationsize' => 3
+      ),
+      'core/roledefs' =>
+      array(
+          'mode' => 1,
+          'component' => 'core',
+          'area' => 'roledefs',
+          'simplekeys' => true,
+          'simpledata' => true,
+          'staticacceleration' => true,
+          'staticaccelerationsize' => 3
+      ),
+      'core/fontawesomeiconmapping' =>
+      array(
+          'mode' => 1,
+          'component' => 'core',
+          'area' => 'fontawesomeiconmapping',
+          'simplekeys' => true,
+          'simpledata' => true,
+          'staticacceleration' => true,
+          'staticaccelerationsize' => 3
+      ),
+      'core/user_group_groupings' =>
+      array(
+          'mode' => 1,
+          'component' => 'core',
+          'area' => 'user_group_groupings',
+          'simplekeys' => true,
+          'simpledata' => true,
+          'staticacceleration' => true,
+          'staticaccelerationsize' => 3
+      ),
+      'core/presignup' =>
+      array(
+          'mode' => 1,
+          'component' => 'core',
+          'area' => 'presignup',
           'simplekeys' => true,
           'simpledata' => true,
           'staticacceleration' => true,
