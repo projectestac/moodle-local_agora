@@ -46,19 +46,26 @@ defined('MOODLE_INTERNAL') || die();
       'class' => 'cachestore_static',
       'lock' => 'cachelock_file_default',
     ),
-    'localmemcache' => 
+    'memcachedservers' =>
     array (
-      'name' => 'localmemcache',
-      'plugin' => 'memcache',
-      'configuration' => 
+      'name' => 'memcachedservers',
+      'plugin' => 'memcached',
+      'configuration' =>
       array (
-        'servers' => $CFG->memcache_servers,
-        'prefix' => $CFG->memcache_prefix,
+      'servers' => array(explode("\n", $CFG->memcache_servers)),
+      'compression' => '1',
+      'serialiser' => '2',
+      'prefix' => $CFG->memcache_prefix,
+      'hash' => '8',
+      'bufferwrites' => '0',
+      'clustered' => false,
+      'setservers' =>'',
+      'isshared' => '0',
       ),
-      'features' => 4,
+      'features' => 20,
       'modes' => 1,
       'mappingsonly' => false,
-      'class' => 'cachestore_memcache',
+      'class' => 'cachestore_memcached',
       'default' => false,
       'lock' => 'cachelock_file_default',
     ),
@@ -68,7 +75,7 @@ defined('MOODLE_INTERNAL') || die();
     0 => 
     array (
       'mode' => 1,
-      'store' => 'localmemcache',
+      'store' => 'memcachedservers',
       'sort' => -1,
     ),
     1 => 
@@ -451,21 +458,6 @@ defined('MOODLE_INTERNAL') || die();
       'selectedsharingoption' => 2,
       'userinputsharingkey' => '',
     ),
-    'block_progress/cachedlogs' => 
-    array (
-      'mode' => 1,
-      'simplekeys' => true,
-      'simpledata' => true,
-      'staticacceleration' => true,
-      'invalidationevents' => 
-      array (
-        0 => 'changesincourse',
-      ),
-      'component' => 'block_progress',
-      'area' => 'cachedlogs',
-      'selectedsharingoption' => 2,
-      'userinputsharingkey' => '',
-    ),
     'filter_wiris/images' => 
     array (
       'mode' => 1,
@@ -526,15 +518,17 @@ defined('MOODLE_INTERNAL') || die();
         'staticacceleration' => true,
         'staticaccelerationsize' => 1,
     ),
-    'tool_mobile' =>
-        array(
+    'tool_mobile/plugininfo' =>
+      array (
         'mode' => 1,
-        'component'=>'tool_mobile',
-        'area'=>'stepdata',
         'simplekeys' => true,
-        'simpledata' => true,
         'staticacceleration' => true,
         'staticaccelerationsize' => 1,
+        'component' => 'tool_mobile',
+        'area' => 'plugininfo',
+        'selectedsharingoption' => 2,
+        'userinputsharingkey' => '',
+        'sharingoptions' => 15,
     ),
     'core/message_processors_enabled' => 
       array(
@@ -629,6 +623,12 @@ defined('MOODLE_INTERNAL') || die();
   ),
   'definitionmappings' => 
   array (
+      0 =>
+      array (
+              'store' => 'default_application',
+              'definition' => 'core/string',
+              'sort' => 1,
+      ),
   ),
   'locks' => 
   array (
