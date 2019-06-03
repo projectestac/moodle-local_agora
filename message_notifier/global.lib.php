@@ -4,13 +4,12 @@ function message_notifier_count_unread_messages(){
     global $USER, $DB;
 
     // Got unread messages so now do another query that joins with the user table.
-    $messagesql = "SELECT count(m.id)
-                     FROM {message} m
-                     JOIN {message_working} mw ON m.id = mw.unreadmessageid
-                     JOIN {message_processors} p ON mw.processorid = p.id
-                    WHERE m.useridto = :userid
-                      AND m.useridfrom > 0
-                      AND p.name='popup'";
+    $messagesql = "select count(m.id)
+                from M2MESSAGE m
+                where m.id not in (select MESSAGEID from m2MESSAGE_USER_ACTIONS mna where m.id = mna.MESSAGEID)
+                and m.useridto = :userid
+                AND m.useridfrom > 0";
+
     return $DB->count_records_sql($messagesql, array('userid' => $USER->id));
 }
 
@@ -20,12 +19,10 @@ function message_notifier_get_messages($limit = 10){
     // Got unread messages so now do another query that joins with the user table.
     $namefields = get_all_user_name_fields(true, 'u');
     $messagesql = "SELECT m.id, m.smallmessage, m.useridfrom, m.useridto, m.timecreated, m.subject, m.contexturl, m.contexturlname, m.notification
-                     FROM {message} m
-                     JOIN {message_working} mw ON m.id = mw.unreadmessageid
-                     JOIN {message_processors} p ON mw.processorid = p.id
-                    WHERE m.useridto = :userid
-                      AND m.useridfrom > 0
-                      AND p.name='popup'";
+                    from M2MESSAGE m
+                    where m.id not in (select MESSAGEID from m2MESSAGE_USER_ACTIONS mna where m.id = mna.MESSAGEID)
+                    and m.useridto = :userid
+                    AND m.useridfrom > 0";
     return $DB->get_records_sql($messagesql, array('userid' => $USER->id), 0, $limit);
 }
 
@@ -35,12 +32,11 @@ function message_notifier_get_message($id){
     // Got unread messages so now do another query that joins with the user table.
     $namefields = get_all_user_name_fields(true, 'u');
     $messagesql = "SELECT m.*
-                     FROM {message} m
-                     JOIN {message_working} mw ON m.id = mw.unreadmessageid
-                     JOIN {message_processors} p ON mw.processorid = p.id
-                    WHERE m.useridto = :userid
-                      AND p.name='popup'
-                      AND m.id = :messageid";
+                    from M2MESSAGE m
+                    where m.id not in (select MESSAGEID from m2MESSAGE_USER_ACTIONS mna where m.id = mna.MESSAGEID)
+                    and m.useridto = :userid
+                    AND m.useridfrom > 0
+                    AND m.id = :messageid";
     return $DB->get_record_sql($messagesql, array('userid' => $USER->id, 'messageid'=>$id));
 }
 
@@ -49,9 +45,9 @@ function message_notifier_get_message($id){
 function message_notifier_get_badge(){
     global $USER, $OUTPUT, $PAGE, $CFG;
     if(!isloggedin()) return;
-    
+
     $PAGE->set_popup_notification_allowed(false);
-    
+
     $num_messages = message_notifier_count_unread_messages();
     if($num_messages == 0){
         $extracss = 'hidden style="display: none;"';
