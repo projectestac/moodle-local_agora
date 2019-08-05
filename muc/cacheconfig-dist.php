@@ -143,9 +143,9 @@ defined('MOODLE_INTERNAL') || die();
     'core/eventinvalidation' => 
     array (
       'mode' => 1,
-      'staticacceleration' => true,
-      'requiredataguarantee' => true,
+      'simplekeys' => true,
       'simpledata' => true,
+      'staticacceleration' => true,
       'component' => 'core',
       'area' => 'eventinvalidation',
       'selectedsharingoption' => 2,
@@ -214,7 +214,7 @@ defined('MOODLE_INTERNAL') || die();
     ),
     'core/calendar_categories' => 
     array (
-      'mode' => 2,
+      'mode' => 1,
       'simplekeys' => true,
       'simpledata' => true,
       'invalidationevents' => 
@@ -355,6 +355,9 @@ defined('MOODLE_INTERNAL') || die();
     array (
       'mode' => 1,
       'simplekeys' => true,
+      'requiredataguarantee' => true,
+      'simpledata' => true,
+      'staticacceleration' => false,
       'canuselocalstore' => true,
       'component' => 'core',
       'area' => 'coursemodinfo',
@@ -364,7 +367,7 @@ defined('MOODLE_INTERNAL') || die();
     ),
     'core/userselections' => 
     array (
-      'mode' => 2,
+      'mode' => 1,
       'simplekeys' => true,
       'simpledata' => true,
       'component' => 'core',
@@ -403,9 +406,10 @@ defined('MOODLE_INTERNAL') || die();
     ),
     'core/navigation_expandcourse' => 
     array (
-      'mode' => 2,
+      'mode' => 1,
       'simplekeys' => true,
       'simpledata' => true,
+      'staticacceleration' => true,
       'component' => 'core',
       'area' => 'navigation_expandcourse',
       'selectedsharingoption' => 2,
@@ -462,8 +466,10 @@ defined('MOODLE_INTERNAL') || die();
     ),
     'core/grade_categories' => 
     array (
-      'mode' => 2,
+      'mode' => 1,
       'simplekeys' => true,
+      'simpledata' => true,
+      'staticacceleration' => true,
       'invalidationevents' => 
       array (
         0 => 'changesingradecategories',
@@ -487,9 +493,9 @@ defined('MOODLE_INTERNAL') || die();
     ),
     'core/tagindexbuilder' => 
     array (
-      'mode' => 2,
+      'mode' => 1,
       'simplekeys' => true,
-      'simplevalues' => true,
+      'simpledata' => true,
       'staticacceleration' => true,
       'staticaccelerationsize' => 10,
       'ttl' => 900,
@@ -545,7 +551,6 @@ defined('MOODLE_INTERNAL') || die();
     array (
       'mode' => 1,
       'simplekeys' => true,
-      'requiredataguarantee' => true,
       'simpledata' => true,
       'staticacceleration' => true,
       'staticaccelerationsize' => 1,
@@ -559,9 +564,8 @@ defined('MOODLE_INTERNAL') || die();
     array (
       'mode' => 1,
       'simplekeys' => true,
-      'requiredataguarantee' => true,
       'simpledata' => true,
-      'staticacceleration' => false,
+      'staticacceleration' => true,
       'component' => 'core',
       'area' => 'postprocessedcss',
       'selectedsharingoption' => 2,
@@ -582,9 +586,10 @@ defined('MOODLE_INTERNAL') || die();
     ),
     'core/presignup' => 
     array (
-      'mode' => 2,
+      'mode' => 1,
       'simplekeys' => true,
       'simpledata' => true,
+      'staticacceleration' => true,
       'ttl' => 1800,
       'component' => 'core',
       'area' => 'presignup',
@@ -659,11 +664,10 @@ defined('MOODLE_INTERNAL') || die();
     'repository_googledocs/folder' => 
     array (
       'mode' => 1,
-      'simplekeys' => false,
+      'simplekeys' => true,
       'simpledata' => true,
       'staticacceleration' => true,
       'staticaccelerationsize' => 10,
-      'canuselocalstore' => true,
       'component' => 'repository_googledocs',
       'area' => 'folder',
       'selectedsharingoption' => 2,
@@ -673,10 +677,10 @@ defined('MOODLE_INTERNAL') || die();
     'repository_onedrive/folder' => 
     array (
       'mode' => 1,
-      'simplekeys' => false,
+      'simplekeys' => true,
+      'requiredataguarantee' => true,
       'simpledata' => true,
-      'staticacceleration' => true,
-      'staticaccelerationsize' => 10,
+      'staticacceleration' => false,
       'canuselocalstore' => true,
       'component' => 'repository_onedrive',
       'area' => 'folder',
@@ -686,7 +690,10 @@ defined('MOODLE_INTERNAL') || die();
     ),
     'repository_skydrive/foldername' => 
     array (
-      'mode' => 2,
+      'mode' => 1,
+      'simplekeys' => true,
+      'simpledata' => true,
+      'staticacceleration' => true,
       'component' => 'repository_skydrive',
       'area' => 'foldername',
       'selectedsharingoption' => 2,
@@ -777,7 +784,7 @@ defined('MOODLE_INTERNAL') || die();
     ),
     'tool_usertours/tourdata' => 
     array (
-      'mode' => 2,
+      'mode' => 1,
       'simplekeys' => true,
       'simpledata' => true,
       'staticacceleration' => true,
