@@ -59,7 +59,7 @@ $path = (isset($CFG->agora_muc_path) && !empty($CFG->agora_muc_path)) ? $CFG->ag
       array (
         'servers' => array(explode("\n", $CFG->memcache_servers)),
         'compression' => '1',
-        'serialiser' => '2',
+        'serialiser' => '1',
         'prefix' => $CFG->memcache_prefix,
         'hash' => '8',
         'bufferwrites' => '0',
