@@ -63,10 +63,8 @@ $path = (isset($CFG->agora_muc_path) && !empty($CFG->agora_muc_path)) ? $CFG->ag
         'prefix' => $CFG->memcache_prefix,
         'hash' => '8',
         'bufferwrites' => '0',
-        'clustered' => false,
-        'setservers' => 
-        array (
-        ),
+        'clustered' => true,
+        'setservers' => [explode("\n", $CFG->memcache_servers)],
         'isshared' => '0',
       ),
       'features' => 20,
