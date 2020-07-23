@@ -280,6 +280,88 @@ mybadges,badges|/badges/mybadges.php|award");
         upgrade_plugin_savepoint(true, 2015100200, 'local', 'agora');
     }
 
+    if ($oldversion < 2020072300) {
+
+        // Set theme to xtec2020
+        set_config('theme', 'xtec2020');
+
+        // Theme xtec2020 has less parameters than xtec2. This is the list of pairs "old name" - "new name"
+        $equivalences = [
+            'admin_alert_end' => 'admin_alert_end',
+            'admin_alert_message' => 'admin_alert_message',
+            'admin_alert_start' => 'admin_alert_start',
+            'agora_alert_end' => 'agora_alert_end',
+            'agora_alert_message' => 'agora_alert_message',
+            'agora_alert_start' => 'agora_alert_start',
+            'color2' => 'maincolor',
+            'color4' => 'fontcolor',
+            'color5' => 'linkscolor',
+            'colorset' => 'colorset',
+            'customcss' => 'customcss',
+            'email' => 'email',
+            'facebook' => 'facebook',
+            'flickr' => 'flickr',
+            'fontsize' => 'fontsize',
+            'fontstyle' => 'fontstyle',
+            'footnote' => 'footnote',
+            'importcss' => 'importcss',
+            'instagram' => 'instagram',
+            'linkedin' => 'linkedin',
+            'logo' => 'logo',
+            'logo_color' => 'headerbg',
+            'nodes' => 'nodes',
+            'phone' => 'phone',
+            'pinterest' => 'pinterest',
+            'skype' => 'skype',
+            'twitter' => 'twitter',
+            'website' => 'website',
+            'whatsapp' => 'whatsapp',
+            'youtube' => 'youtube',
+        ];
+
+        // The font size parameter has changed the accepted values. This is the transformation matrix
+        $fontsize_transform = [
+            'moltpetita' => '80',
+            'petita' => '90',
+            'mitjana' => '100',
+            'gran' => '120',
+            'moltgran' => '140',
+        ];
+
+        try {
+            // Get all records from theme xtec2
+            $results = $DB->get_records('config_plugins', ['plugin' => 'theme_xtec2']);
+        } catch (Exception $exception) {
+            mtrace($exception->getMessage());
+        }
+
+        foreach ($results as $result) {
+            // Skip values that doesn't exist in xtec2
+            if (array_key_exists($result->name, $equivalences)) {
+                // Special case: font size transformation
+                if ('fontsize' == $result->name) {
+                    $result->value = $fontsize_transform[$result->value];
+                }
+                set_config($equivalences[$result->name], $result->value, 'theme_xtec2020');
+            }
+        }
+
+        // Copy logo to theme xtec2020
+        $fs = get_file_storage();
+        $files = $fs->get_area_files(1, 'theme_xtec2', 'logo');
+
+        foreach ($files as $file) {
+            if (!$file->is_directory()) {
+                // First parameter is the difference with the original file
+                $fs->create_file_from_storedfile(['component' => 'theme_xtec2020'], $file->get_id());
+            }
+        }
+
+        purge_caches(['theme']);
+
+        upgrade_plugin_savepoint(true, 2020072300, 'local', 'agora');
+    }
+
     return true;
 }
 
