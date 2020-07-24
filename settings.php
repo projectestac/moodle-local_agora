@@ -23,6 +23,7 @@ if ($hassiteconfig) {
     $settings = new admin_settingpage('local_agora', get_string('pluginname', 'local_agora'));
     $ADMIN->add('localplugins', $settings);
 
+    /*
     if (is_xtecadmin() || (!is_agora() && is_siteadmin())) {
         $settings->add(new admin_setting_heading('mailer', get_string('mailer', 'local_agora'), ''));
         require_once ($CFG->dirroot.'/local/agora/mailer/mailsender.class.php');
@@ -41,5 +42,5 @@ if ($hassiteconfig) {
         $default = get_admin_datadir_folder('log', false);
         $settings->add(new admin_setting_configtext('apligestlogpath', get_string('apligestlogpath', 'local_agora'), '', $default, PARAM_TEXT));
     }
-
+    */
 }
