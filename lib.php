@@ -10,9 +10,14 @@ function is_eoi() {
     return isset($CFG->iseoi) && $CFG->iseoi;
 }
 
-function is_portal() {
+function is_odissea() {
     global $CFG;
-    return isset($CFG->isportal) && $CFG->isportal;
+    return isset($CFG->isodissea) && $CFG->isodissea;
+}
+
+function is_alexandria() {
+    global $CFG;
+    return isset($CFG->isalexandria) && $CFG->isalexandria;
 }
 
 function is_xtecadmin($user=null) {
