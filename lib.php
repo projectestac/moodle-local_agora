@@ -513,7 +513,7 @@ function send_apligest_mail(&$mail, $user, $attachments = []) {
 function get_colors_from_nodes($solveerrors = false) {
 
     try {
-        $filename = INSTALL_BASE.'/html/wordpress/wp-content/themes/reactor-primaria-1/custom-tac/colors_nodes.php';
+        $filename = INSTALL_BASE . '/html/wordpress/wp-content/themes/reactor/custom-tac/colors_nodes.php';
         if (file_exists($filename)) {
             global $colors_nodes;
             $db = external_db('nodes');
@@ -528,10 +528,10 @@ function get_colors_from_nodes($solveerrors = false) {
                 'logo_color' => $paleta['primary']
             );
             if ($solveerrors) {
-                set_config('color2', $colors['color'], 'theme_xtec2');
-                set_config('color4', $colors['color'], 'theme_xtec2');
-                set_config('color5', $colors['color'], 'theme_xtec2');
-                set_config('logo_color', $colors['logo_color'], 'theme_xtec2');
+                set_config('color2', $colors['color'], 'theme_xtec2020');
+                set_config('color4', $colors['color'], 'theme_xtec2020');
+                set_config('color5', $colors['color'], 'theme_xtec2020');
+                set_config('logo_color', $colors['logo_color'], 'theme_xtec2020');
             }
             //$db->dispose();
             return $colors;
@@ -541,10 +541,10 @@ function get_colors_from_nodes($solveerrors = false) {
     }
 
     if ($solveerrors) {
-        set_config('colorset', 'grana', 'theme_xtec2');
-        set_config('color2', '#AC2013', 'theme_xtec2');
-        set_config('color4', '#303030', 'theme_xtec2');
-        set_config('color5', '#AC2013', 'theme_xtec2');
+        set_config('colorset', 'PEDC', 'theme_xtec2020');
+        set_config('color2', '#FF494E', 'theme_xtec2020');
+        set_config('color4', '#007377', 'theme_xtec2020');
+        set_config('color5', '#910048', 'theme_xtec2020');
     }
     return false;
 }
@@ -574,6 +574,7 @@ function external_db($service) {
 
     $options = array();
     $options['dbpersist'] = false;
+    $options['dbcollation'] = 'utf8_unicode_ci';
     if (isset($agora[$service]['port']) && !empty($agora[$service]['port'])) {
         $options['dbport'] = $agora[$service]['port'];
     }
