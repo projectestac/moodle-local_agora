@@ -241,7 +241,7 @@ function is_rush_hour() {
     global $CFG;
 
     // If param is not defined or is false, there's no rush hour.
-    if (!isset($CFG->enable_hour_restrictions) || ($CFG->enable_hour_restrictions == false)) {
+    if (!isset($CFG->enable_hour_restrictions) || (!$CFG->enable_hour_restrictions)) {
         return false;
     }
 
