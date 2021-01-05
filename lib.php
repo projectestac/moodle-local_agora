@@ -432,7 +432,6 @@ function get_colors_from_nodes($solveerrors = false) {
     return false;
 }
 
-
 /**
  * Connecta a una base de dades configurada d'un servei
  *
