@@ -73,58 +73,41 @@ function get_debug() {
 }
 
 // Execute a command via CLI
-function run_cli($command, $outputfile = false, $append = true, $background = true, $params = array()) {
+function run_cli($command, $outputfile = false, $append = true, $background = true, $params = []) {
     global $CFG;
 
-    $command = $CFG->dirroot . '/'.$command;
+    $command = $CFG->dirroot . '/' . $command;
 
     if (isset($CFG->dnscentre)) {
         $params['ccentre'] = $CFG->dnscentre;
     }
-    if ($params && is_array($params)) {
+
+    if (is_array($params)) {
         foreach ($params as $key => $value) {
-            $command .= ' --'.$key.'='.$value;
+            $command .= ' --' . $key . '=' . $value;
         }
     }
 
-    if (isset($CFG->clicommand)) {
-        $cmd = $CFG->clicommand;
-    } else {
-        $cmd = "php";
-    }
-
-    $command = 'nohup '.$cmd.' '.$command;
-
-    if ($append) {
-        $command .= ' >> ';
-    } else {
-        $command .= ' > ';
-    }
+    $cmd = (isset($CFG->clicommand)) ? $CFG->clicommand : 'php';
+    $command = 'nohup ' . $cmd . ' ' . $command;
+    $command .= ($append) ? ' >> ' : ' > ';
 
     if (empty($outputfile)) {
-        if ($background) {
-            $outputfile = '/dev/null';
-        } else {
-            $outputfile = '/dev/stdout';
-        }
+        $outputfile = ($background) ? '/dev/null' : '/dev/stdout';
     }
 
-    $command .= $outputfile.' 2>&1 ';
+    $command .= $outputfile . ' 2>&1 ';
 
     if ($background) {
-         $command .= ' & echo $!';
+        $command .= ' & echo $!';
     }
 
-    // Això és una marranada a evitar...
-    if (isset($CFG->cli_ldlibrarypath)) {
-        putenv('LD_LIBRARY_PATH='.$CFG->cli_ldlibrarypath);
-    }
     if (isset($CFG->cli_path)) {
-        putenv('PATH='.$CFG->cli_path);
+        putenv('PATH=' . $CFG->cli_path);
     }
 
-    $output = "";
-    $returnvar = "";
+    $output = '';
+    $returnvar = '';
     exec($command, $output, $returnvar);
 
     if (is_xtecadmin()) {
@@ -193,11 +176,9 @@ function run_cli_cron($background = true) {
     }
 
     $outputfile = false;
-    if (isset($CFG->savecronlog)) {
-        $savecronlog = $CFG->savecronlog;
-    } else {
-        $savecronlog = $DB->get_field('config', 'value', array('name' => 'savecronlog'));
-    }
+
+    $savecronlog = (isset($CFG->savecronlog)) ? $CFG->savecronlog : $DB->get_field('config', 'value', ['name' => 'savecronlog']);
+
     if (!empty($savecronlog)) {
         $outputdir = get_admin_datadir_folder('crons', false);
         $outputfile = $outputdir.'/cron_'.$CFG->siteidentifier.'_'.date("Ymd").'.log';
