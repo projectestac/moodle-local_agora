@@ -307,13 +307,15 @@ function is_service_enabled($service) {
 
 function get_service_url($service) {
     global $agora, $CFG;
+
     if (isset($agora['server']) && is_service_enabled($service)) {
-        $dns = $agora['server']['server'] . $agora['server']['base'].$CFG->dnscentre.'/';
         if ($service == 'nodes') {
-            return $dns;
+            return $agora['server']['nodes'] . $agora['server']['base'] . $CFG->dnscentre . '/';
+        } else {
+            return $agora['server']['server'] . $agora['server']['base'] . $CFG->dnscentre . '/' . $service . '/';
         }
-        return $dns . $service.'/';
     }
+
     return false;
 }
 
