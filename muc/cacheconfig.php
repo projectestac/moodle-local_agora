@@ -72,7 +72,6 @@ $path = (isset($CFG->agora_muc_path) && !empty($CFG->agora_muc_path)) ? $CFG->ag
       'default' => false,
       'lock' => 'cachelock_file_default',
     ),
-/*
     'redisservers' =>
     array (
       'name' => 'redisservers',
@@ -90,7 +89,6 @@ $path = (isset($CFG->agora_muc_path) && !empty($CFG->agora_muc_path)) ? $CFG->ag
       'class' => 'cachestore_redis',
       'default' => false,
     ),
-*/
   ),
   'modemappings' => 
   array (
