@@ -106,6 +106,9 @@ function run_cli($command, $outputfile = false, $append = true, $background = tr
         putenv('PATH=' . $CFG->cli_path);
     }
 
+    // Extra safety
+    \core\session\manager::write_close();
+
     $output = '';
     $returnvar = '';
     exec($command, $output, $returnvar);
@@ -121,6 +124,7 @@ function run_cli($command, $outputfile = false, $append = true, $background = tr
 
 function check_cron_run() {
     global $CFG;
+
     if (!empty($CFG->cronclionly)) {
         $nocli = optional_param('nocli', false, PARAM_BOOL);
         if (!$nocli) {
@@ -163,14 +167,7 @@ function run_cli_cron($background = true) {
     $command = $CFG->admin.'/cli/cron.php';
 
     $force = optional_param('forcecron', false, PARAM_BOOL);
-    if (!$force) {
-        $cronstart = get_config(null, 'cronstart');
-        $cronperiod = 480; // 8 minutes minimum
-        if ($cronstart + $cronperiod > time()) {
-            echo "Moodle cron was executed recently.\n";
-            exit(1);
-        }
-    } else {
+    if ($force) {
         $command .= ' --forcecron=true';
         echo "Moodle cron forced.\n";
     }
@@ -207,7 +204,7 @@ function run_cli_cron($background = true) {
     }
     $append = true;
 
-    mtrace('Cron is being executing in background by CLI...');
+    mtrace('Cron is being executed in background by CLI...');
 
     run_cli($command, $outputfile, $append, $background);
 }
@@ -332,7 +329,7 @@ function get_admin_datadir($exceptiononerror = true) {
     }
 
     if (isset($agora['admin']['datadir'])) {
-        $dir = $agora['server']['root'].'/'.$agora['admin']['datadir'].'/data/moodle2/'.$CFG->siteidentifier;
+        $dir = $agora['server']['root'] . $agora['admin']['datadir'] . '/data/moodle2/' . $CFG->siteidentifier;
     } else {
         $dir = $CFG->dataroot.'/repository/files';
     }
