@@ -1,8 +1,6 @@
 <?php defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
-// If $CFG->agora_muc_path is not set, use default cache directories
-$path = (isset($CFG->agora_muc_path) && !empty($CFG->agora_muc_path)) ? $CFG->agora_muc_path . '/cache' : '';
 
  $configuration = array (
   'siteidentifier' => $CFG->siteidentifier,
@@ -14,7 +12,7 @@ $path = (isset($CFG->agora_muc_path) && !empty($CFG->agora_muc_path)) ? $CFG->ag
       'plugin' => 'file',
       'configuration' => 
       array (
-        'path' => $path,
+        'path' => $CFG->cachedir ? : '',
         'autocreate' => true,
       ),
       'features' => 14,
