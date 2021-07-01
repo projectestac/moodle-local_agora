@@ -1097,36 +1097,6 @@ global $CFG;
   ),
   'definitionmappings' => 
   array (
-    0 => 
-    array (
-      'store' => 'default_application',
-      'definition' => 'core/string',
-      'sort' => 1,
-    ),
-    1 => 
-    array (
-      'store' => 'default_application',
-      'definition' => 'core/coursemodinfo',
-      'sort' => 1,
-    ),
-    2 => 
-    array (
-      'store' => 'default_application',
-      'definition' => 'core/yuimodules',
-      'sort' => 1,
-    ),
-    3 => 
-    array (
-      'store' => 'default_application',
-      'definition' => 'core/fontawesomeiconmapping',
-      'sort' => 1,
-    ),
-    4 => 
-    array (
-      'store' => 'default_application',
-      'definition' => 'core/plugin_functions',
-      'sort' => 1,
-    ),
   ),
   'locks' => 
   array (
