@@ -395,7 +395,8 @@ function get_moodle2_admin_datadir_folder($folder = '', $exceptiononerror = true
 function get_colors_from_nodes($solveerrors = false) {
 
     try {
-        $filename = INSTALL_BASE . '/html/wordpress/wp-content/themes/reactor/custom-tac/colors_nodes.php';
+        global $agora;
+        $filename = $agora['server']['root'] . '/html/wordpress/wp-content/themes/reactor/custom-tac/colors_nodes.php';
         if (file_exists($filename)) {
             global $colors_nodes;
             $db = external_db('nodes');
