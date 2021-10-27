@@ -45,3 +45,5 @@ $string['environment_url_desc'] = 'Si está activada, se usará el WSDL para env
 $string['clean_adware'] = 'Limpia Adware';
 $string['detect_adware'] = 'Detecta Adware';
 $string['messagehistoryfull'] = 'Todos los mensajes';
+
+$string['clean_chat_data'] = 'Neteja registres del mòdul chat';
