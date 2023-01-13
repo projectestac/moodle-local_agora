@@ -20,3 +20,10 @@ $string['detect_adware'] = 'Detect Adware';
 
 // H5P
 $string['hvpdisabled'] = '"HVP - Interactive Content" activity is disabled. Please, use H5P instead.';
+
+// IDI
+$string['IDI'] = 'IDI';
+$string['codenotinidi'] = 'Cannot login because center code is not set in IDI';
+$string['codenotinididetail'] = 'Center code not set in IDI for user {$a->username} ({$a->firstname} {$a->lastname}), so they can not log in.';
+$string['codenotmatchidi'] = 'Cannot login because center code does not match the code set in IDI';
+$string['codenotmatchididetail'] = 'Center code in IDI for user {$a->username} is {$a->code} ({$a->firstname} {$a->lastname}). Only users with center code {$a->center} can log in.';

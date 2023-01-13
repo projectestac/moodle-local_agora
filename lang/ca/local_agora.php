@@ -20,3 +20,10 @@ $string['detect_adware'] = 'Detecta Adware';
 
 // H5P
 $string['hvpdisabled'] = 'L\'activitat «HVP - Contingut interactiu» està inhabilitada. Utilitzeu l\'activitat «H5P» en el seu lloc.';
+
+// IDI
+$string['IDI'] = 'IDI';
+$string['codenotinidi'] = 'No pot entrar perquè l\'usuari no té informat el codi de centre a l\'IDI';
+$string['codenotinididetail'] = 'L\'usuari {$a->username} ({$a->firstname} {$a->lastname}) no té informat el codi de centre a l\'IDI. Per aquest motiu no pot entrar.';
+$string['codenotmatchidi'] = 'No pot entrar perquè el codi del centre no està inclòs en els que l\'usuari té associats a l\'IDI.';
+$string['codenotmatchididetail'] = 'El codi de centre de l\'usuari {$a->username} ({$a->firstname} {$a->lastname}) a l\'IDI és {$a->code}. Només poden entrar al Moodle els usuaris amb el codi de centre {$a->center}.';
