@@ -411,10 +411,10 @@ function get_colors_from_nodes($solveerrors = false) {
                 'logo_color' => $paleta['primary']
             );
             if ($solveerrors) {
-                set_config('color2', $colors['color'], 'theme_xtec2020');
-                set_config('color4', $colors['color'], 'theme_xtec2020');
-                set_config('color5', $colors['color'], 'theme_xtec2020');
-                set_config('logo_color', $colors['logo_color'], 'theme_xtec2020');
+                set_config('color2', $colors['color'], 'theme_xtecboost');
+                set_config('color4', $colors['color'], 'theme_xtecboost');
+                set_config('color5', $colors['color'], 'theme_xtecboost');
+                set_config('logo_color', $colors['logo_color'], 'theme_xtecboost');
             }
             //$db->dispose();
             return $colors;
@@ -424,10 +424,10 @@ function get_colors_from_nodes($solveerrors = false) {
     }
 
     if ($solveerrors) {
-        set_config('colorset', 'PEDC', 'theme_xtec2020');
-        set_config('color2', '#FF494E', 'theme_xtec2020');
-        set_config('color4', '#007377', 'theme_xtec2020');
-        set_config('color5', '#910048', 'theme_xtec2020');
+        set_config('colorset', 'PEDC', 'theme_xtecboost');
+        set_config('color2', '#FF494E', 'theme_xtecboost');
+        set_config('color4', '#007377', 'theme_xtecboost');
+        set_config('color5', '#910048', 'theme_xtecboost');
     }
     return false;
 }

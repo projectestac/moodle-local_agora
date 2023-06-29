@@ -48,3 +48,21 @@ function create_user_tag_field(): bool {
 
     return true;
 }
+
+function transfer_config_fields(): bool {
+    global $DB;
+
+    $old_theme_config_records = $DB->get_records('config_plugins', ['plugin' => 'xtec2020']);
+
+    foreach ($old_theme_config_records as $old_theme_config_record) {
+        $new_theme_config_record = new stdClass();
+
+        $new_theme_config_record->plugin = 'xtecboost';
+        $new_theme_config_record->name = $old_theme_config_record->name;
+        $new_theme_config_record->value = $old_theme_config_record->value;
+
+        $DB->insert_record('config_plugins',$new_theme_config_record);
+    }
+
+    return true;
+}
