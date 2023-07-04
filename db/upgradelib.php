@@ -52,16 +52,25 @@ function create_user_tag_field(): bool {
 function transfer_config_fields(): bool {
     global $DB;
 
-    $old_theme_config_records = $DB->get_records('config_plugins', ['plugin' => 'xtec2020']);
+    try {
+        $old_theme_config_records = $DB->get_records('config_plugins', ['plugin' => 'theme_xtec2020']);
+    } catch (Exception $exception) {
+        mtrace($exception->getMessage());
+    }
 
-    foreach ($old_theme_config_records as $old_theme_config_record) {
-        $new_theme_config_record = new stdClass();
+    foreach ($old_theme_config_records as $record) {
+        set_config($record->name, $record->value, 'theme_xtecboost');
+    }
 
-        $new_theme_config_record->plugin = 'xtecboost';
-        $new_theme_config_record->name = $old_theme_config_record->name;
-        $new_theme_config_record->value = $old_theme_config_record->value;
+    // Copy logo to theme xtec2020
+    $fs = get_file_storage();
+    $files = $fs->get_area_files(1, 'theme_xtec2020', 'logo');
 
-        $DB->insert_record('config_plugins',$new_theme_config_record);
+    foreach ($files as $file) {
+        if (!$file->is_directory()) {
+            // First parameter is the difference with the original file
+            $fs->create_file_from_storedfile(['component' => 'theme_xtecboost'], $file->get_id());
+        }
     }
 
     return true;

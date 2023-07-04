@@ -294,10 +294,10 @@ mybadges,badges|/badges/mybadges.php|award");
 
     if ($oldversion < 2020072300) {
 
-        // Set theme to xtecboost
-        set_config('theme', 'xtecboost');
+        // Set theme to xtec2020
+        set_config('theme', 'xtec2020');
 
-        // Theme xtecboost has less parameters than xtec2. This is the list of pairs "old name" - "new name"
+        // Theme xtec2020 has fewer parameters than xtec2. This is the list of pairs "old name" - "new name"
         $equivalences = [
             'admin_alert_end' => 'admin_alert_end',
             'admin_alert_message' => 'admin_alert_message',
@@ -354,18 +354,18 @@ mybadges,badges|/badges/mybadges.php|award");
                 if ('fontsize' == $result->name) {
                     $result->value = $fontsize_transform[$result->value];
                 }
-                set_config($equivalences[$result->name], $result->value, 'theme_xtecboost');
+                set_config($equivalences[$result->name], $result->value, 'theme_xtec2020');
             }
         }
 
-        // Copy logo to theme xtecboost
+        // Copy logo to theme xtec2020
         $fs = get_file_storage();
         $files = $fs->get_area_files(1, 'theme_xtec2', 'logo');
 
         foreach ($files as $file) {
             if (!$file->is_directory()) {
                 // First parameter is the difference with the original file
-                $fs->create_file_from_storedfile(['component' => 'theme_xtecboost'], $file->get_id());
+                $fs->create_file_from_storedfile(['component' => 'theme_xtec2020'], $file->get_id());
             }
         }
 
@@ -374,19 +374,36 @@ mybadges,badges|/badges/mybadges.php|award");
         upgrade_plugin_savepoint(true, 2020072300, 'local', 'agora');
     }
 
+    require_once $CFG->dirroot . '/local/agora/db/upgradelib.php';
+
     if ($oldversion < 2023011300) {
-        require_once $CFG->dirroot . '/local/agora/db/upgradelib.php';
         // Create user profile field for IDI.
         create_user_tag_field();
+        upgrade_plugin_savepoint(true, 2023011300, 'local', 'agora');
     }
 
-    if ($oldversion < 2023062900) {
-        require_once $CFG->dirroot . '/local/agora/db/upgradelib.php';
-        // Change configs fields for new theme xtecboost
+    if ($oldversion < 2023070400) {
+        // Set theme to xtecboost.
+        set_config('theme', 'xtecboost');
+
+        // Change configs fields for new theme xtecboost.
         transfer_config_fields();
+
+        // Add new configs fields for new theme xtecboost.
+        set_config('unaddableblocks', 'navigation,settings,course_list,section_links', 'theme_xtecboost');
+        set_config('preset', 'default.scss', 'theme_xtecboost');
+        set_config('presetfiles', '', 'theme_xtecboost');
+        set_config('brandcolor', '', 'theme_xtecboost');
+        set_config('scsspre', '', 'theme_xtecboost');
+        set_config('scss', '', 'theme_xtecboost');
+        set_config('coursecontentmaxwidth', '830', 'theme_xtecboost');
+
+        purge_caches(['theme']);
+        upgrade_plugin_savepoint(true, 2023070400, 'local', 'agora');
     }
 
     return true;
 }
+
 
 
