@@ -70,11 +70,11 @@ global $CFG;
       'default' => false,
       'lock' => 'cachelock_file_default',
     ),
-    'redisservers' =>
+    'redisservers' => 
     array (
       'name' => 'redisservers',
       'plugin' => 'redis',
-      'configuration' =>
+      'configuration' => 
       array (
         'server' => $CFG->redis_servers,
         'prefix' => $CFG->redis_prefix,
@@ -98,13 +98,13 @@ global $CFG;
       'mode' => 1,
       'sort' => 0,
     ),
-    1 =>
+    1 => 
     array (
       'store' => 'default_session',
       'mode' => 2,
       'sort' => 0,
     ),
-    2 =>
+    2 => 
     array (
       'store' => 'default_request',
       'mode' => 4,
@@ -240,23 +240,12 @@ global $CFG;
       'simplekeys' => true,
       'simpledata' => true,
       'staticacceleration' => true,
-      'staticaccelerationsize' => 1,
+      'staticaccelerationsize' => 2,
       'ttl' => 3600,
       'component' => 'core',
       'area' => 'capabilities',
       'selectedsharingoption' => 2,
       'userinputsharingkey' => '',
-    ),
-    'core/deprecatedcapabilities' => 
-    array (
-      'mode' => 1,
-      'simplekeys' => false,
-      'simpledata' => true,
-      'staticacceleration' => true,
-      'staticaccelerationsize' => 1,
-      'ttl' => 3600,
-      'component' => 'core',
-      'area' => 'deprecatedcapabilities',
     ),
     'core/yuimodules' => 
     array (
@@ -336,6 +325,8 @@ global $CFG;
       'staticacceleration' => true,
       'component' => 'core',
       'area' => 'coursesectionspreferences',
+      'selectedsharingoption' => 2,
+      'userinputsharingkey' => '',
     ),
     'core/coursecontacts' => 
     array (
@@ -355,6 +346,8 @@ global $CFG;
       'simpledata' => true,
       'component' => 'core',
       'area' => 'courseeditorstate',
+      'selectedsharingoption' => 2,
+      'userinputsharingkey' => '',
     ),
     'core/repositories' => 
     array (
@@ -760,6 +753,8 @@ global $CFG;
       ),
       'component' => 'core',
       'area' => 'contentbank_allowed_categories',
+      'selectedsharingoption' => 2,
+      'userinputsharingkey' => '',
     ),
     'core/contentbank_allowed_courses' => 
     array (
@@ -774,6 +769,8 @@ global $CFG;
       ),
       'component' => 'core',
       'area' => 'contentbank_allowed_courses',
+      'selectedsharingoption' => 2,
+      'userinputsharingkey' => '',
     ),
     'core/reportbuilder_allowed_reports' => 
     array (
@@ -784,6 +781,8 @@ global $CFG;
       'ttl' => 1800,
       'component' => 'core',
       'area' => 'reportbuilder_allowed_reports',
+      'selectedsharingoption' => 2,
+      'userinputsharingkey' => '',
     ),
     'core/file_imageinfo' => 
     array (
@@ -795,6 +794,8 @@ global $CFG;
       'staticaccelerationsize' => 100,
       'component' => 'core',
       'area' => 'file_imageinfo',
+      'selectedsharingoption' => 2,
+      'userinputsharingkey' => '',
     ),
     'availability_completion/previous_cache' => 
     array (
@@ -856,6 +857,8 @@ global $CFG;
       ),
       'component' => 'mod_bigbluebuttonbn',
       'area' => 'serverinfo',
+      'selectedsharingoption' => 2,
+      'userinputsharingkey' => '',
     ),
     'mod_bigbluebuttonbn/validatedurls' => 
     array (
@@ -863,6 +866,8 @@ global $CFG;
       'simpledata' => true,
       'component' => 'mod_bigbluebuttonbn',
       'area' => 'validatedurls',
+      'selectedsharingoption' => 2,
+      'userinputsharingkey' => '',
     ),
     'mod_bigbluebuttonbn/recordings' => 
     array (
@@ -875,12 +880,16 @@ global $CFG;
       'ttl' => 300,
       'component' => 'mod_bigbluebuttonbn',
       'area' => 'recordings',
+      'selectedsharingoption' => 2,
+      'userinputsharingkey' => '',
     ),
     'mod_bigbluebuttonbn/currentfetch' => 
     array (
       'mode' => 4,
       'component' => 'mod_bigbluebuttonbn',
       'area' => 'currentfetch',
+      'selectedsharingoption' => 2,
+      'userinputsharingkey' => '',
     ),
     'mod_forum/forum_is_tracked' => 
     array (
