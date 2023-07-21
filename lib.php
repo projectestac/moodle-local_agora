@@ -488,14 +488,14 @@ function external_db($service) {
         throw new dml_exception('dbdriverproblem', "Unknown driver $library/$dbtype");
     }
 
-    $host = $school_info['dbhost_' . $service];
+    $host = $school_info['dbhost_' . mb_strtolower($service)];
     $username = $agora[$service]['username'];
     $password = $agora[$service]['userpwd'];
     $prefix = $agora[$service]['prefix'];
     if (!empty($prefix)) {
         $prefix .= '_';
     }
-    $dbname = $agora[$service]['userprefix'] . $school_info['id_' . $service];
+    $dbname = $agora[$service]['userprefix'] . $school_info['id_' . mb_strtolower($service)];
 
     try {
         if ($handler->connect($host, $username, $password, $dbname, $prefix, $options)) {
