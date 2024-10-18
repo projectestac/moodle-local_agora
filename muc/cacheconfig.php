@@ -47,29 +47,6 @@ global $CFG;
       'class' => 'cachestore_static',
       'lock' => 'cachelock_file_default',
     ),
-    'memcachedservers' => 
-    array (
-      'name' => 'memcachedservers',
-      'plugin' => 'memcached',
-      'configuration' => 
-      array (
-        'servers' => [explode("\n", $CFG->memcache_servers)],
-        'compression' => '1',
-        'serialiser' => '1',
-        'prefix' => $CFG->memcache_prefix,
-        'hash' => '8',
-        'bufferwrites' => '0',
-        'clustered' => true,
-        'setservers' => [explode("\n", $CFG->memcache_servers)],
-        'isshared' => '0',
-      ),
-      'features' => 20,
-      'modes' => 1,
-      'mappingsonly' => false,
-      'class' => 'cachestore_memcached',
-      'default' => false,
-      'lock' => 'cachelock_file_default',
-    ),
     'redisservers' => 
     array (
       'name' => 'redisservers',
@@ -164,6 +141,16 @@ global $CFG;
       'selectedsharingoption' => 2,
       'userinputsharingkey' => '',
     ),
+    'core/hookcallbacks' => 
+    array (
+      'mode' => 1,
+      'simplekeys' => true,
+      'simpledata' => true,
+      'staticacceleration' => false,
+      'canuselocalstore' => true,
+      'component' => 'core',
+      'area' => 'hookcallbacks',
+    ),
     'core/questiondata' => 
     array (
       'mode' => 1,
@@ -206,6 +193,15 @@ global $CFG;
       'area' => 'groupdata',
       'selectedsharingoption' => 2,
       'userinputsharingkey' => '',
+    ),
+    'core/coursehiddengroups' => 
+    array (
+      'mode' => 1,
+      'simplekeys' => true,
+      'simpledata' => true,
+      'staticacceleration' => true,
+      'component' => 'core',
+      'area' => 'coursehiddengroups',
     ),
     'core/calendar_subscriptions' => 
     array (
@@ -349,6 +345,16 @@ global $CFG;
       'selectedsharingoption' => 2,
       'userinputsharingkey' => '',
     ),
+    'core/courseactionsinstances' => 
+    array (
+      'mode' => 4,
+      'simplekeys' => true,
+      'simpledata' => false,
+      'staticacceleration' => true,
+      'staticaccelerationsize' => 10,
+      'component' => 'core',
+      'area' => 'courseactionsinstances',
+    ),
     'core/repositories' => 
     array (
       'mode' => 4,
@@ -451,6 +457,7 @@ global $CFG;
       'mode' => 1,
       'simplekeys' => true,
       'simpledata' => true,
+      'canuselocalstore' => true,
       'staticacceleration' => true,
       'staticaccelerationsize' => 5,
       'component' => 'core',
@@ -687,6 +694,14 @@ global $CFG;
       'selectedsharingoption' => 2,
       'userinputsharingkey' => '',
     ),
+    'core/h5p_libraries' => 
+    array (
+      'mode' => 1,
+      'simplekeys' => true,
+      'canuselocalstore' => true,
+      'component' => 'core',
+      'area' => 'h5p_libraries',
+    ),
     'core/h5p_library_files' => 
     array (
       'mode' => 1,
@@ -797,6 +812,39 @@ global $CFG;
       'selectedsharingoption' => 2,
       'userinputsharingkey' => '',
     ),
+    'core/moodlenet_usercanshare' => 
+    array (
+      'mode' => 2,
+      'simplekeys' => true,
+      'simpledata' => true,
+      'ttl' => 1800,
+      'invalidationevents' => 
+      array (
+        0 => 'changesincoursecat',
+        1 => 'changesincategoryenrolment',
+        2 => 'changesincourse',
+      ),
+      'component' => 'core',
+      'area' => 'moodlenet_usercanshare',
+    ),
+    'core/theme_usedincontext' => 
+    array (
+      'mode' => 1,
+      'simplekeys' => true,
+      'simpledata' => true,
+      'staticacceleration' => true,
+      'component' => 'core',
+      'area' => 'theme_usedincontext',
+    ),
+    'core/navigation_cache' => 
+    array (
+      'mode' => 2,
+      'simplekeys' => true,
+      'simpledata' => true,
+      'ttl' => 1800,
+      'component' => 'core',
+      'area' => 'navigation_cache',
+    ),
     'availability_completion/previous_cache' => 
     array (
       'mode' => 4,
@@ -891,6 +939,16 @@ global $CFG;
       'selectedsharingoption' => 2,
       'userinputsharingkey' => '',
     ),
+    'mod_bigbluebuttonbn/subplugins' => 
+    array (
+      'mode' => 1,
+      'invalidationevents' => 
+      array (
+        0 => 'mod_bigbluebuttonbn/subpluginschanged',
+      ),
+      'component' => 'mod_bigbluebuttonbn',
+      'area' => 'subplugins',
+    ),
     'mod_forum/forum_is_tracked' => 
     array (
       'mode' => 4,
@@ -901,6 +959,19 @@ global $CFG;
       'area' => 'forum_is_tracked',
       'selectedsharingoption' => 2,
       'userinputsharingkey' => '',
+    ),
+    'mod_forum/forum_count_discussions' => 
+    array (
+      'mode' => 4,
+      'simplekeys' => true,
+      'simpledata' => true,
+      'staticacceleration' => true,
+      'invalidationevents' => 
+      array (
+        0 => 'changesinforumdiscussions',
+      ),
+      'component' => 'mod_forum',
+      'area' => 'forum_count_discussions',
     ),
     'mod_glossary/concepts' => 
     array (
@@ -937,10 +1008,41 @@ global $CFG;
       'mode' => 1,
       'simplekeys' => true,
       'datasource' => '\\mod_quiz\\cache\\overrides',
+      'invalidationevents' => 
+      array (
+        0 => 'userdatareset',
+      ),
       'component' => 'mod_quiz',
       'area' => 'overrides',
       'selectedsharingoption' => 2,
       'userinputsharingkey' => '',
+    ),
+    'mod_scorm/elements' => 
+    array (
+      'mode' => 1,
+      'datasource' => '\\mod_scorm\\cache\\elements',
+      'component' => 'mod_scorm',
+      'area' => 'elements',
+    ),
+    'communication_customlink/customlink' => 
+    array (
+      'mode' => 1,
+      'simplekeys' => true,
+      'simpledata' => true,
+      'component' => 'communication_customlink',
+      'area' => 'customlink',
+    ),
+    'communication_matrix/serverversions' => 
+    array (
+      'mode' => 1,
+      'simplekeys' => true,
+      'simpledata' => true,
+      'staticacceleration' => true,
+      'staticaccelerationsize' => 1,
+      'canuselocalstore' => true,
+      'ttl' => 86400,
+      'component' => 'communication_matrix',
+      'area' => 'serverversions',
     ),
     'filter_wiris/images' => 
     array (
