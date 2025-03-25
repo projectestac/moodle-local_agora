@@ -150,6 +150,8 @@ global $CFG;
       'canuselocalstore' => true,
       'component' => 'core',
       'area' => 'hookcallbacks',
+      'selectedsharingoption' => 2,
+      'userinputsharingkey' => '',
     ),
     'core/questiondata' => 
     array (
@@ -202,6 +204,8 @@ global $CFG;
       'staticacceleration' => true,
       'component' => 'core',
       'area' => 'coursehiddengroups',
+      'selectedsharingoption' => 2,
+      'userinputsharingkey' => '',
     ),
     'core/calendar_subscriptions' => 
     array (
@@ -340,6 +344,10 @@ global $CFG;
       'mode' => 2,
       'simplekeys' => true,
       'simpledata' => true,
+      'invalidationevents' => 
+      array (
+        0 => 'changesincoursestate',
+      ),
       'component' => 'core',
       'area' => 'courseeditorstate',
       'selectedsharingoption' => 2,
@@ -354,6 +362,8 @@ global $CFG;
       'staticaccelerationsize' => 10,
       'component' => 'core',
       'area' => 'courseactionsinstances',
+      'selectedsharingoption' => 2,
+      'userinputsharingkey' => '',
     ),
     'core/repositories' => 
     array (
@@ -701,6 +711,8 @@ global $CFG;
       'canuselocalstore' => true,
       'component' => 'core',
       'area' => 'h5p_libraries',
+      'selectedsharingoption' => 2,
+      'userinputsharingkey' => '',
     ),
     'core/h5p_library_files' => 
     array (
@@ -826,6 +838,8 @@ global $CFG;
       ),
       'component' => 'core',
       'area' => 'moodlenet_usercanshare',
+      'selectedsharingoption' => 2,
+      'userinputsharingkey' => '',
     ),
     'core/theme_usedincontext' => 
     array (
@@ -835,6 +849,8 @@ global $CFG;
       'staticacceleration' => true,
       'component' => 'core',
       'area' => 'theme_usedincontext',
+      'selectedsharingoption' => 2,
+      'userinputsharingkey' => '',
     ),
     'core/navigation_cache' => 
     array (
@@ -844,6 +860,8 @@ global $CFG;
       'ttl' => 1800,
       'component' => 'core',
       'area' => 'navigation_cache',
+      'selectedsharingoption' => 2,
+      'userinputsharingkey' => '',
     ),
     'availability_completion/previous_cache' => 
     array (
@@ -948,6 +966,8 @@ global $CFG;
       ),
       'component' => 'mod_bigbluebuttonbn',
       'area' => 'subplugins',
+      'selectedsharingoption' => 2,
+      'userinputsharingkey' => '',
     ),
     'mod_forum/forum_is_tracked' => 
     array (
@@ -972,6 +992,8 @@ global $CFG;
       ),
       'component' => 'mod_forum',
       'area' => 'forum_count_discussions',
+      'selectedsharingoption' => 2,
+      'userinputsharingkey' => '',
     ),
     'mod_glossary/concepts' => 
     array (
@@ -1023,6 +1045,8 @@ global $CFG;
       'datasource' => '\\mod_scorm\\cache\\elements',
       'component' => 'mod_scorm',
       'area' => 'elements',
+      'selectedsharingoption' => 2,
+      'userinputsharingkey' => '',
     ),
     'communication_customlink/customlink' => 
     array (
@@ -1031,6 +1055,8 @@ global $CFG;
       'simpledata' => true,
       'component' => 'communication_customlink',
       'area' => 'customlink',
+      'selectedsharingoption' => 2,
+      'userinputsharingkey' => '',
     ),
     'communication_matrix/serverversions' => 
     array (
@@ -1043,6 +1069,8 @@ global $CFG;
       'ttl' => 86400,
       'component' => 'communication_matrix',
       'area' => 'serverversions',
+      'selectedsharingoption' => 2,
+      'userinputsharingkey' => '',
     ),
     'filter_wiris/images' => 
     array (
